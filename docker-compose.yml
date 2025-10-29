@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  srbijabus-frontend:
+    build: 
+      context: ./srbijabus-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    container_name: srbijabus-frontend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
