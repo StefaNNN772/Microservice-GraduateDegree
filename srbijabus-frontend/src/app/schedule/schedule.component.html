@@ -1,0 +1,124 @@
+<app-navbar-transport-provider></app-navbar-transport-provider>
+<div class="schedule-container">
+    <div class="schedule-left">
+        <h2>Management of bus schedules</h2>
+
+        <form [formGroup]="schedulesForm" (ngSubmit)="submitForm()">
+            <label>Bus line:</label>
+            <label style="color: darkgrey; font-size: 11px; font-weight: normal;">Please insert in the format: Place-Place (Example:Beograd-Ruma-Bijeljina)</label>
+            <input type="text" formControlName="departure" required>
+            <div *ngIf="departure?.invalid && departure?.touched" style="color: red; font-size: 12px;">
+                <span *ngIf="departure?.errors?.['required']">This field is required.</span>
+                <span *ngIf="departure?.errors?.['pattern']">Format must be Place-Place (Example: Beograd-Ruma-Bijeljina).</span>
+            </div>
+
+            <label>Departure time:</label>
+            <input type="time" formControlName="departureTime" required>
+            <div *ngIf="departureTime?.invalid && departureTime?.touched" style="color: red; font-size: 12px;">
+                <span *ngIf="departureTime?.errors?.['required']">This field is required.</span>
+            </div>
+
+            <label>Available seats:</label>
+            <input type="number" formControlName="availableSeats" required>
+            <div *ngIf="availableSeats?.invalid && availableSeats?.touched" style="color: red; font-size: 12px;">
+                <span *ngIf="availableSeats?.errors?.['required']">This field is required.</span>
+                <span *ngIf="availableSeats?.errors?.['pattern']">This number must be positive.</span>
+            </div>
+
+            <label>Days of operation:</label>
+            <div formGroupName="days" class="days-container">
+            <!-- Everyday option -->
+            <div class="everyday-option">
+                <label class="day-checkbox everyday-checkbox">
+                <input type="checkbox" formControlName="everyday" (change)="toggleEveryday()">
+                <span class="checkmark"></span>
+                <span class="day-text">Everyday</span>
+                </label>
+            </div>
+
+            <!-- Individual days -->
+            <div class="individual-days">
+                <label class="day-checkbox" *ngFor="let day of daysList">
+                <input type="checkbox" [formControlName]="day.key" (change)="checkIndividualDays()">
+                <span class="checkmark"></span>
+                <span class="day-text">{{ day.short }}</span>
+                </label>
+            </div>
+            </div>
+
+            <label>Discount (%):</label>
+            <input type="number" formControlName="discount" required>
+            <div *ngIf="discount?.invalid && discount?.touched" style="color: red; font-size: 12px;">
+                <span *ngIf="discount?.errors?.['required']">This field is required.</span>
+                <span *ngIf="discount?.errors?.['max']">This field must be 100 or less.</span>
+                <span *ngIf="discount?.errors?.['pattern']">This number must be positive.</span>
+            </div>
+
+            <label>Price per kilometer (RSD):</label>
+            <input type="number" formControlName="pricePerKilometer" required>
+            <div *ngIf="pricePerKilometer?.invalid && pricePerKilometer?.touched" style="color: red; font-size: 12px;">
+                <span *ngIf="pricePerKilometer?.errors?.['required']">This field is required.</span>
+                <span *ngIf="pricePerKilometer?.errors?.['pattern']">This number must be positive.</span>
+            </div>
+
+            <button type="submit">{{ editingSchedule ? 'Update bus schedule' : 'Add bus schedule'}}</button>
+            <button type="button" (click)="cancelEdit()" *ngIf="editingSchedule">Cancel</button>
+        </form>
+    </div>
+
+    <div class="schedule-right">
+
+        <mat-form-field>
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Novi Sad" #input>
+          </mat-form-field>
+
+        <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="departure">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Departure </th>
+                <td mat-cell *matCellDef="let schedule"> {{schedule.departure}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="arrival">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Arrival </th>
+                <td mat-cell *matCellDef="let schedule"> {{schedule.arrival}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="departureTime">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Departure time </th>
+                <td mat-cell *matCellDef="let schedule"> {{schedule.departureTime}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="arrivalTime">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Arrival time </th>
+                <td mat-cell *matCellDef="let schedule"> {{schedule.arrivalTime}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="availableSeats">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Available seats </th>
+                <td mat-cell *matCellDef="let schedule"> {{schedule.availableSeats}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
+                <td mat-cell *matCellDef="let schedule"> {{schedule.price}} RSD</td>
+            </ng-container>
+
+            <ng-container matColumnDef="discount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Discount </th>
+                <td mat-cell *matCellDef="let schedule"> {{schedule.discount}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="options">
+                <th mat-header-cell *matHeaderCellDef> Options </th>
+                <td mat-cell *matCellDef="let schedule">
+                    <button (click)="editSchedule(schedule)">Update</button>
+                    <button (click)="deleteSchedule(schedule.id)">Delete</button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+</div>

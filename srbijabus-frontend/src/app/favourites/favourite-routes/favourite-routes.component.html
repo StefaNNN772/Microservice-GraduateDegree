@@ -1,0 +1,95 @@
+<app-navbar-user></app-navbar-user>
+<div class="container">
+  <div class="left">
+    <h2>Favourite bus lines</h2>
+
+    <div class="form-group">
+      <div class="routes">
+        <h3 *ngIf="favouriteRoutes.length === 0">No favourite routes exists.</h3>
+        <div *ngFor="let route of favouriteRoutes" class="favourite-route"
+             [ngClass]="{ 'selected': selectedRoute === (route.departure + '-' + route.arrival) }"
+             (click)="selectRoute(route)">
+          <span>{{ route.departure }} - {{ route.arrival }}</span>
+          <span class="heart-button" (click)="removeFromFavourites(route, $event)">
+            ❤️
+          </span>
+        </div>
+      </div>
+
+      <label for="travelDate">Travel date:</label>
+      <input
+        type="date"
+        id="travelDate"
+        [min]="minDate"
+        [(ngModel)]="selectedDate"
+        (change)="onDateChange()"
+      />
+    </div>
+  </div>
+
+  <div class="right">
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Novi Sad" #input>
+    </mat-form-field>
+
+    <table mat-table [dataSource]="dataSource" matSort *ngIf="dataSource.data.length > 0">
+      <ng-container matColumnDef="departure">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Departure </th>
+        <td mat-cell *matCellDef="let busline"> {{busline.departure}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="arrival">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Arrival </th>
+        <td mat-cell *matCellDef="let busline"> {{busline.arrival}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="departureDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Departure date </th>
+        <td mat-cell *matCellDef="let busline"> {{busline.departureDate}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="departureTime">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Departure time </th>
+        <td mat-cell *matCellDef="let busline"> {{busline.departureTime}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="arrivalTime">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Arrival time </th>
+        <td mat-cell *matCellDef="let busline"> {{busline.arrivalTime}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="provider">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Carrier </th>
+        <td mat-cell *matCellDef="let busline"> {{busline.provider}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="availableSeats">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Available seats </th>
+        <td mat-cell *matCellDef="let busline"> {{busline.availableSeats}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
+        <td mat-cell *matCellDef="let busline"> {{busline.price}} RSD</td>
+      </ng-container>
+
+      <ng-container matColumnDef="discount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Discount </th>
+        <td mat-cell *matCellDef="let busline"> {{busline.discount}} </td>
+      </ng-container>
+
+      <ng-container  matColumnDef="options">
+        <th mat-header-cell *matHeaderCellDef> Options </th>
+        <td mat-cell *matCellDef="let busline">
+          <button (click)="busReservation(busline.id)">Bus reservation</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <p *ngIf="selectedDate && filteredLines.length === 0">Nema dostupnih linija za izabrani datum.</p>
+  </div>
+</div>

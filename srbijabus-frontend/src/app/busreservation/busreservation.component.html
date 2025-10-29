@@ -1,0 +1,173 @@
+<app-navbar-user *ngIf="userRole=== 'User'"></app-navbar-user>
+<div class="reservation-container">
+  <div class="reservation-left">
+    <h2>Bus line reservation</h2>
+    
+    <!-- Loading spinner -->
+    <div *ngIf="loading && !showStripeOverlay" class="loading-spinner">
+      <mat-spinner></mat-spinner>
+      <p>Loading...</p>
+    </div>
+
+    <!-- Bus line details -->
+    <div *ngIf="busLine && (!loading || showStripeOverlay)" class="bus-details">
+      <h3>Bus line details</h3>
+      
+      <div class="detail-group">
+        <label>Departure:</label>
+        <input type="text" [value]="busLine.departure" readonly>
+      </div>
+
+      <div class="detail-group">
+        <label>Arrival:</label>
+        <input type="text" [value]="busLine.arrival" readonly>
+      </div>
+
+      <div class="detail-group">
+        <label>Departure date:</label>
+        <input type="text" [value]="busLine.departureDate" readonly>
+      </div>
+
+      <div class="detail-group">
+        <label>Departure time:</label>
+        <input type="text" [value]="busLine.departureTime" readonly>
+      </div>
+
+      <div class="detail-group">
+        <label>Arrival time:</label>
+        <input type="text" [value]="busLine.arrivalTime" readonly>
+      </div>
+
+      <div class="detail-group">
+        <label>Provider:</label>
+        <input type="text" [value]="busLine.provider" readonly>
+      </div>
+
+      <div class="detail-group">
+        <label>Available seats:</label>
+        <input type="text" [value]="busLine.availableSeats" readonly>
+      </div>
+
+      <div class="detail-group">
+        <label>Price per passenger</label>
+        <input type="text" [value]="busLine.price + ' RSD'" readonly>
+      </div>
+    </div>
+  </div>
+
+  <div class="reservation-right">
+    <div *ngIf="busLine && (!loading || showStripeOverlay)" class="reservation-form">
+      <h3>Reservation</h3>
+
+      <!-- Number of passengers -->
+      <div class="form-group">
+        <label for="passengers">Number of passengers:</label>
+        <input 
+          type="number" 
+          id="passengers"
+          [(ngModel)]="numberOfPassengers"
+          [min]="1"
+          [max]="busLine.availableSeats"
+          (change)="onPassengerCountChange()"
+          [disabled]="loading"
+        >
+        <small>Maximum {{ busLine.availableSeats }} passengers</small>
+      </div>
+
+      <!-- Return ticket option (disabled) -->
+      <div class="form-group checkbox-group">
+        <input 
+          type="checkbox" 
+          id="returnTicket"
+          [(ngModel)]="returnTicket"
+          disabled
+        >
+        <label for="returnTicket">Return ticket</label>
+      </div>
+
+      <!-- Payment method -->
+      <div class="form-group">
+        <label>Payment method:</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input 
+              type="radio" 
+              id="stationPayment"
+              name="paymentMethod"
+              value="station"
+              [(ngModel)]="paymentMethod"
+              (change)="onPaymentMethodChange()"
+              [disabled]="loading"
+            >
+            <label for="stationPayment">Pay at bus station</label>
+          </div>
+          
+          <div class="radio-option">
+            <input 
+              type="radio" 
+              id="onlinePayment"
+              name="paymentMethod"
+              value="online"
+              [(ngModel)]="paymentMethod"
+              (change)="onPaymentMethodChange()"
+              [disabled]="loading"
+            >
+            <label for="onlinePayment">Pay with card</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Minimum amount warning -->
+      <div *ngIf="paymentMethod === 'online' && getTotalPrice() < 50" class="payment-warning">
+        <strong>Note:</strong> Minimum amount for online payment is 50 RSD. 
+        Current amount: {{ getTotalPrice() }} RSD.
+        <br>Please add more passengers or choose "Pay at bus station".
+      </div>
+
+      <!-- Stripe payment form - JEDAN CARD ELEMENT, nikad ne nestaje dok je online izabrano -->
+      <div *ngIf="paymentMethod === 'online' && getTotalPrice() >= 50" class="stripe-payment-form" style="position:relative;">
+        <h4>Payment Details</h4>
+        
+        <div class="form-group">
+          <label for="cardholderName">Cardholder Name:</label>
+          <input 
+            type="text" 
+            id="cardholderName"
+            [(ngModel)]="cardholderName"
+            placeholder="Enter cardholder name"
+            class="stripe-input"
+            [disabled]="loading"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="cardElement">Card Information:</label>
+          <div id="card-element" class="stripe-element"></div>
+        </div>
+        
+        <div *ngIf="paymentError" class="payment-error">
+          {{ paymentError }}
+        </div>
+
+        <!-- Overlay dok traje placanje -->
+        <div *ngIf="showStripeOverlay" class="stripe-loading-overlay">
+          <mat-spinner></mat-spinner>
+          <p>Processing payment...</p>
+        </div>
+      </div>
+
+      <div class="total-price">
+        <h4>Total price: {{ getTotalPrice() }} RSD</h4>
+      </div>
+
+      <button 
+        class="buy-button"
+        (click)="onPurchase()"
+        [disabled]="!canPurchase() || loading"
+      >
+        <span *ngIf="showStripeOverlay || loading">Processing...</span>
+        <span *ngIf="!showStripeOverlay && !loading">Buy</span>
+      </button>
+    </div>
+  </div>
+</div>

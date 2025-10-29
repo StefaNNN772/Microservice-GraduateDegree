@@ -1,0 +1,95 @@
+mat-toolbar {
+  position: sticky;
+  top: 0;
+  background-color: #e3f2fd;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  width: 42px;
+  height: auto;
+  margin-right: 16px;
+  border-radius: 9px;
+}
+
+.title {
+  color: #305a87;
+  font-size: 32px;
+  line-height: 130%;
+  font-weight: 700;
+  width: min-content;
+  height: min-content;
+  white-space: nowrap;
+  flex-direction: column;
+  font-family: Roboto, 'Segoe UI', Arial, sans-serif;
+}
+
+.rectangle37 {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 120px;
+  height: 46px;
+  border-radius: 8px;
+  background-color: rgba(0, 121, 107, 0.2);
+}
+
+button.mat-button.mat-accent {
+  color: #305a87;
+}
+
+button.mat-button.mat-accent:hover {
+  background-color: transparent;
+}
+
+.text {
+  color: #305a87;
+  font-family: Roboto, 'Segoe UI', Arial, sans-serif;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.text1 {
+  color: #305a87;
+  font-family: Roboto, 'Segoe UI', Arial, sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+mat-toolbar button.text1 {
+  color: #305a87;
+}
+
+.material-icons {
+  font-size: 23px;
+  margin-right: 10px;
+  color: #305a87;
+}
+
+.icon {
+  font-size: 23px;
+  color: #305a87;
+  margin-right: 10px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.mat-menu-panel {
+  background-color: white !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.mat-menu-item {
+  color: #305a87;
+  font-weight: normal;
+}
+
+.mat-menu-item:hover {
+  background-color: #e3f2fd;
+  color: #305a87;
+}

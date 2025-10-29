@@ -1,0 +1,131 @@
+.login-container {
+  display: flex;
+  height: 100vh;
+  background: linear-gradient(135deg, #f2f5f7, #ffffff);
+}
+
+.login-left, .login-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.login-left {
+  flex-direction: column;
+  background-color: #f0f4f8;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+}
+
+.login-left:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.login-left h2 {
+  font-size: 2.5rem;
+  color: #305a87;
+  margin-bottom: 1rem;
+}
+
+.login-left p {
+  margin-bottom: 1rem;
+  color: #ec1d24;
+}
+
+.login-left form {
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-left form label {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #37474f;
+}
+
+.login-left form input {
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid #90a4ae;
+  border-radius: 6px;
+}
+
+.login-left .btn {
+  padding: 0.75rem;
+  margin-top: 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: #305a87;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.login-left .btn-signin:hover {
+  background-color: #1c3652;
+}
+
+.google p{
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  color: #37474f;
+}
+
+.btn-google{
+  cursor: pointer;
+  background-color: transparent;
+  color: #305a87;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.login-left .highlight-box {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: rgba(160, 250, 225, 0.26);
+  border-radius: 8px;
+  color: #ec1d24;
+  font-size: 1rem;
+}
+
+.login-left .highlight-box strong {
+  font-weight: bold;
+}
+
+.login-right {
+  background-color: #e3f2fd;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-info {
+  text-align: center;
+}
+
+.login-info h3 {
+  font-size: 2rem;
+  color: #305a87;
+  margin-bottom: 1rem;
+}
+
+.login-info p {
+  margin-bottom: 1rem;
+  color: #ec1d24;
+}
+
+.login-info img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #90a4ae;
+  border-radius: 8px;
+}
