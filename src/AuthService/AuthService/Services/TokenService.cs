@@ -10,7 +10,7 @@ namespace AuthService.Services
     public class TokenService
     {
         private string APP_NAME = "serbiaBus";  // Izdavač tokena
-        private string SECRET = "ThisIsAVeryLongSecretKeyThatIsAtLeast64BytesLongForHmacSha512";  // Tajna za potpisivanje
+        private string SECRET = "ThisIsAVeryLongSecretKeyThatIsAtLeast64BytesLongForHmacSha512ABCDEFGHIJK";  // Tajna za potpisivanje
         private int EXPIRES_IN = 180000;  // Period važenja tokena u sekundama (50 sati)
         private string AUTH_HEADER = "Authorization";
 

@@ -86,12 +86,14 @@ namespace AuthService.Services
 
         public async Task<bool> SubmitDiscountRequest(User user, string discountType, IFormFile proofImage)
         {
+            var uploadPath = Environment.GetEnvironmentVariable("UPLOAD_PATH") ?? "uploads";
+
             var timestamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
             var fileName = $"{user.Id}_{timestamp}{Path.GetExtension(proofImage.FileName)}";
-            var folderPath = Path.Combine("uploads", "requests", discountType.ToLower());
+            var folderPath = Path.Combine(uploadPath, "requests", discountType.ToLower());
             Directory.CreateDirectory(folderPath);
             var filePath = Path.Combine(folderPath, fileName);
-            Console.WriteLine(filePath);
+            Console.WriteLine($"Saving discount request to: {filePath}");
 
             var updatedUser = await _userRepository.SubmitDiscountRequestAsync(user, filePath, discountType);
             if (updatedUser != null)
@@ -159,11 +161,13 @@ namespace AuthService.Services
 
         public async Task<bool> AddProfileImage(User user, IFormFile profileImage)
         {
+            var uploadPath = Environment.GetEnvironmentVariable("UPLOAD_PATH") ?? "uploads";
+
             var fileName = $"{user.Id}_{profileImage.FileName}";
-            var folderPath = Path.Combine("uploads", "profile-pictures");
+            var folderPath = Path.Combine(uploadPath, "profile-pictures");
             Directory.CreateDirectory(folderPath);
             var filePath = Path.Combine(folderPath, fileName);
-            Console.WriteLine(filePath);
+            Console.WriteLine($"Saving profile image to: {filePath}");
 
             var updatedUser = await _userRepository.AddProfileImage(user, filePath);
             if (updatedUser != null)

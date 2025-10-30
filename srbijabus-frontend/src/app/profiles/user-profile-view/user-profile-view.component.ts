@@ -6,6 +6,7 @@ import {formatDate} from "@angular/common";
 import {UpdateUserProfileDto} from "../../dtos/update-user-profile-dto";
 import {DiscountType} from "../../enum/discount-type";
 import {DiscountStatus} from "../../enum/discount-status";
+import {environment} from "../../../assets/environments/environment";
 
 @Component({
   selector: 'app-user-profile-view',
@@ -127,7 +128,7 @@ export class UserProfileViewComponent implements OnInit{
   }
 
   getFullUrl(path: string): string {
-    return `http://localhost:5231/${path}`;
+    return `${environment.apiUrl}${path}`;
   }
 
   openImage(path: string) {

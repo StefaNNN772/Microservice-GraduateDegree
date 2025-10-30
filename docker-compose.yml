@@ -1,13 +1,65 @@
 version: '3.8'
 
 services:
-  srbijabus-frontend:
-    build: 
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: authservice_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: kalabunga
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - auth-network
+
+  authservice:
+    build:
+      context: ./src/AuthService/AuthService
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8081
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=authservice_db;Username=postgres;Password=kalabunga
+      - Cors__Origins__0=http://localhost:4200
+      - Email__SMTP=smtp.gmail.com
+      - Email__Port=587
+      - Email__SenderEmail=schneiderelectricinternship@gmail.com
+      - Email__SenderPassword=aeoo vuqm gifg pnsw
+      - UPLOAD_PATH=/app/uploads
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - auth-network
+
+  frontend:
+    build:
       context: ./srbijabus-frontend
       dockerfile: Dockerfile
     ports:
       - "4200:4200"
-    container_name: srbijabus-frontend
-    restart: unless-stopped
     environment:
-      - NODE_ENV=production
+      - API_URL=http://localhost:8081/
+    depends_on:
+      - authservice
+    networks:
+      - auth-network
+
+volumes:
+  postgres_data:
+
+networks:
+  auth-network:
+    driver: bridge
