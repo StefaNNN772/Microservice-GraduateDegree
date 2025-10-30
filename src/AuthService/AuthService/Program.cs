@@ -1,23 +1,47 @@
+using AuthService.Data;
+using AuthService.Helpers;
+using AuthService.Repository;
+using AuthService.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<ProviderRepository>();
+
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<ProviderService>();
+builder.Services.AddScoped<AuthenticationManager>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        policy =>
+        {
+            policy.WithOrigins(builder.Configuration.GetSection("Cors:Origins").Get<string[]>())
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("AllowAngularApp");
 
+app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

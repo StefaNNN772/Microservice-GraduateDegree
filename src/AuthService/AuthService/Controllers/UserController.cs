@@ -1,5 +1,10 @@
-﻿using AuthService.Services;
+﻿using AuthService.DTOs;
+using AuthService.Models;
+using AuthService.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AuthService.Controllers
 {

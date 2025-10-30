@@ -1,5 +1,7 @@
 ﻿using AuthService.Data;
+using AuthService.DTOs;
 using AuthService.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.Repository
 {

@@ -1,4 +1,7 @@
-﻿using AuthService.Models;
+﻿using AuthService.DTOs;
+using AuthService.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 

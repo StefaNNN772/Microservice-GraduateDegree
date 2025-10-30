@@ -1,4 +1,7 @@
-﻿namespace AuthService.Services
+﻿using AuthService.Models;
+using AuthService.Repository;
+
+namespace AuthService.Services
 {
     public class AuthenticationManager
     {
