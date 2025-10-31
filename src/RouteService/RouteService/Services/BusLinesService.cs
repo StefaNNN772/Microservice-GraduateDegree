@@ -1,4 +1,5 @@
-﻿using RouteService.Models;
+﻿using RouteService.DTOs;
+using RouteService.Models;
 using RouteService.Repository;
 
 namespace RouteService.Services
@@ -17,6 +18,11 @@ namespace RouteService.Services
             return await _busLinesRepository.GetRoutes();
         }
 
+        public async Task<BusLine> GetBusSeats(long id)
+        {
+            return await _busLinesRepository.GetBusSeats(id);
+        }
+
         public async Task<List<BusLine>> GetBusLinesForRoute(string departure, string arrival)
         {
             return await _busLinesRepository.GetBusLinesForRoute(departure, arrival);
@@ -25,6 +31,16 @@ namespace RouteService.Services
         public async Task<string> GetProviderName(long id)
         {
             return await _busLinesRepository.GetProviderName(id);
+        }
+
+        public async Task<BusLineDTO> GetBusLine(long id)
+        {
+            return await _busLinesRepository.GetBusLine(id);
+        }
+
+        public async Task<List<BusLine>> GetBusLinesByScheduleId(long id)
+        {
+            return await _busLinesRepository.GetBusLinesByScheduleId(id);
         }
     }
 }

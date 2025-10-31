@@ -1,5 +1,6 @@
 {
   "Routes": [
+    // ==================== AUTH SERVICE - Authentication ====================
     {
       "DownstreamPathTemplate": "/login",
       "DownstreamScheme": "http",
@@ -25,6 +26,20 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/google/login",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8081
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/google/login",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+
+    // ==================== AUTH SERVICE - Users ====================
+    {
       "DownstreamPathTemplate": "/users/{userId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -33,14 +48,165 @@
           "Port": 8081
         }
       ],
-      "UpstreamPathTemplate": "/api/auth/users/{userId}",
+      "UpstreamPathTemplate": "/api/users/{userId}",
       "UpstreamHttpMethod": [ "GET" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }
     },
     {
-      "DownstreamPathTemplate": "/api/BusLines/routes",
+      "DownstreamPathTemplate": "/users/by-email/{email}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8081
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/by-email/{email}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/users/update/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8081
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/update/{userId}",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/users/request/discount/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8081
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/request/discount/{userId}",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/users/discount-requests",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8081
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/discount-requests",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/users/update-discount-request/{userId}/{approved}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8081
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/update-discount-request/{userId}/{approved}",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/users/delete-discount-request/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8081
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/delete-discount-request/{userId}",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/users/approved-discounts",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8081
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/approved-discounts",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/users/add-profile-image/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8081
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/add-profile-image/{userId}",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+
+    // ==================== AUTH SERVICE - Providers ====================
+    {
+      "DownstreamPathTemplate": "/providers/add",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8081
+        }
+      ],
+      "UpstreamPathTemplate": "/api/providers/add",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/providers/{providerId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8081
+        }
+      ],
+      "UpstreamPathTemplate": "/api/providers/{providerId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+
+    // ==================== ROUTE SERVICE - Bus Lines ====================
+    {
+      "DownstreamPathTemplate": "/busLines/routes",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -48,11 +214,149 @@
           "Port": 8082
         }
       ],
-      "UpstreamPathTemplate": "/api/routes/buslines/routes",
+      "UpstreamPathTemplate": "/api/buslines/routes",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/BusReservation/reserve",
+      "DownstreamPathTemplate": "/busLines/routes/{route}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "routeservice",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/buslines/routes/{route}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+
+    // ==================== ROUTE SERVICE - Schedules ====================
+    {
+      "DownstreamPathTemplate": "/schedules/addSchedule",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "routeservice",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/schedules/addSchedule",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/schedules/getSchedules",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "routeservice",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/schedules/getSchedules",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/schedules/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "routeservice",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/schedules/{id}",
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/schedules/updateSchedule/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "routeservice",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/schedules/updateSchedule/{id}",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+
+    // ==================== ROUTE SERVICE - Favourites ====================
+    {
+      "DownstreamPathTemplate": "/favourites/route/add",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "routeservice",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/favourites/route/add",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/favourites/route/remove",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "routeservice",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/favourites/route/remove",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/favourites/route/check",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "routeservice",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/favourites/route/check",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/favourites/routes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "routeservice",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/favourites/routes",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+
+    // ==================== RESERVATION SERVICE - Bus Reservations ====================
+    {
+      "DownstreamPathTemplate": "/busReservation/getBusLine/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -60,7 +364,37 @@
           "Port": 8083
         }
       ],
-      "UpstreamPathTemplate": "/api/reservations/reserve",
+      "UpstreamPathTemplate": "/api/busReservation/getBusLine/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/busReservation/create-payment-intent",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "reservationservice",
+          "Port": 8083
+        }
+      ],
+      "UpstreamPathTemplate": "/api/busReservation/create-payment-intent",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/busReservation/add",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "reservationservice",
+          "Port": 8083
+        }
+      ],
+      "UpstreamPathTemplate": "/api/busReservation/add",
       "UpstreamHttpMethod": [ "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"

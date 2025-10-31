@@ -1,4 +1,5 @@
 ﻿using AuthService.DTOs;
+using AuthService.Models;
 using AuthService.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +36,19 @@ namespace AuthService.Controllers
             }
 
             return Ok("Added new provider successfully.");
+        }
 
+        [HttpGet("providers/{providerId}")]
+        public async Task<ActionResult<Provider>> GetUserById(long providerId)
+        {
+            var provider = await _providerService.FindProviderById(providerId);
+
+            if (provider == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(provider);
         }
     }
 }

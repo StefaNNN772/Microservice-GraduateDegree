@@ -22,6 +22,34 @@ namespace RouteService.Controllers
             this._emailService = emailService;
         }
 
+        [HttpPost("schedules/getSchedule/{id}")]
+        [Produces("application/json")]
+        public async Task<ActionResult<Schedules>> GetSchedule(long id)
+        {
+            var schedule = await _schedulesService.GetScheduleById(id);
+
+            if (schedule == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(schedule);
+        }
+
+        [HttpPost("schedules/getSchedules/{id}/{departure}")]
+        [Produces("application/json")]
+        public async Task<ActionResult<List<Schedules>>> GetSchedules(string id, string departure)
+        {
+            var schedules = await _schedulesService.GetScheduleByIdAndDeparture(id, departure);
+
+            if (schedules == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(schedules);
+        }
+
         [HttpPost("schedules/addSchedule")]
         [Produces("application/json")]
         public async Task<IActionResult> AddSchedule([FromBody] SchedulesDTO schedulesDto)
@@ -181,20 +209,20 @@ namespace RouteService.Controllers
         [Produces("application/json")]
         public async Task<IActionResult> DeleteSchedules(long id)
         {
-            var tickets = await _schedulesService.UserToNotify(id);
-            foreach (var u in tickets)
-            {
-                Thread emailThread = new Thread(async () =>
-                {
-                    _emailService.SendEmail(u.User.Email, "Sorry, provider deleted bus line for your trip.<br>", "Trip information:<br>" +
-                                                            "Departure: " + u.BusLine.Schedule.Departure + "<br>" +
-                                                            "Arrival: " + u.BusLine.Schedule.Arrival + "<br>" +
-                                                            "Departure date: " + u.BusLine.DepartureDate.ToString("dd/MM/yyyy") + "<br><br>" +
-                                                            "Your money will be returned soon if you paid with MasterCard.");
-                });
-                emailThread.IsBackground = true;
-                emailThread.Start();
-            }
+            //var tickets = await _schedulesService.UserToNotify(id);
+            //foreach (var u in tickets)
+            //{
+            //    Thread emailThread = new Thread(async () =>
+            //    {
+            //        _emailService.SendEmail(u.User.Email, "Sorry, provider deleted bus line for your trip.<br>", "Trip information:<br>" +
+            //                                                "Departure: " + u.BusLine.Schedule.Departure + "<br>" +
+            //                                                "Arrival: " + u.BusLine.Schedule.Arrival + "<br>" +
+            //                                                "Departure date: " + u.BusLine.DepartureDate.ToString("dd/MM/yyyy") + "<br><br>" +
+            //                                                "Your money will be returned soon if you paid with MasterCard.");
+            //    });
+            //    emailThread.IsBackground = true;
+            //    emailThread.Start();
+            //}
 
             var result = await _schedulesService.DeleteSchedule(id);
 
@@ -240,25 +268,25 @@ namespace RouteService.Controllers
 
                 result = await _schedulesService.UpdateSchedule(schedule);
 
-                var tickets = await _schedulesService.GetTicketsToNotifyForUpdate(schedule.Id);
+                //var tickets = await _schedulesService.GetTicketsToNotifyForUpdate(schedule.Id);
 
-                foreach (var u in tickets)
-                {
-                    Thread emailThread = new Thread(async () =>
-                    {
-                        _emailService.SendEmail(u.User.Email, "Sorry, provider updated bus line for your trip", "New trip information:<br>" +
-                                                                "Departure: " + u.BusLine.Schedule.Departure + "<br>" +
-                                                                "Arrival: " + u.BusLine.Schedule.Arrival + "<br>" +
-                                                                "Departure time: " + schedule.DepartureTime.ToString(@"hh\:mm") + "<br>" +
-                                                                "Arrival time: " + schedule.ArrivalTime.ToString(@"hh\:mm") + "<br>" +
-                                                                "Provider discount: " + schedule.Discount + "%" + "<br>" +
-                                                                "Base price: " + newPrice + " RSD (the price remains the same if you paid via MasterCard)<br>" +
-                                                                "Departure date: " + u.BusLine.DepartureDate.ToString("dd/MM/yyyy") + "<br><br>" +
-                                                                "Your money will be returned soon if you paid with MasterCard.");
-                    });
-                    emailThread.IsBackground = true;
-                    emailThread.Start();
-                }
+                //foreach (var u in tickets)
+                //{
+                //    Thread emailThread = new Thread(async () =>
+                //    {
+                //        _emailService.SendEmail(u.User.Email, "Sorry, provider updated bus line for your trip", "New trip information:<br>" +
+                //                                                "Departure: " + u.BusLine.Schedule.Departure + "<br>" +
+                //                                                "Arrival: " + u.BusLine.Schedule.Arrival + "<br>" +
+                //                                                "Departure time: " + schedule.DepartureTime.ToString(@"hh\:mm") + "<br>" +
+                //                                                "Arrival time: " + schedule.ArrivalTime.ToString(@"hh\:mm") + "<br>" +
+                //                                                "Provider discount: " + schedule.Discount + "%" + "<br>" +
+                //                                                "Base price: " + newPrice + " RSD (the price remains the same if you paid via MasterCard)<br>" +
+                //                                                "Departure date: " + u.BusLine.DepartureDate.ToString("dd/MM/yyyy") + "<br><br>" +
+                //                                                "Your money will be returned soon if you paid with MasterCard.");
+                //    });
+                //    emailThread.IsBackground = true;
+                //    emailThread.Start();
+                //}
             }
             else if (((scheduleDTO.PricePerKilometer != schedule.PricePerKilometer || newDepartureTime != schedule.DepartureTime)
                 && scheduleDTO.AvailableSeats == schedule.AvailableSeats) ||
@@ -280,25 +308,25 @@ namespace RouteService.Controllers
                 result = await _schedulesService.UpdateSchedule(schedule);
 
                 // Notification about updates
-                var tickets = await _schedulesService.GetTicketsToNotifyForUpdate(schedule.Id);
+                //var tickets = await _schedulesService.GetTicketsToNotifyForUpdate(schedule.Id);
 
-                foreach (var u in tickets)
-                {
-                    Thread emailThread = new Thread(async () =>
-                    {
-                        _emailService.SendEmail(u.User.Email, "Sorry, provider updated bus line for your trip", "New trip information:<br>" +
-                                                                "Departure: " + u.BusLine.Schedule.Departure + "<br>" +
-                                                                "Arrival: " + u.BusLine.Schedule.Arrival + "<br>" +
-                                                                "Departure time: " + schedule.DepartureTime.ToString(@"hh\:mm") + "<br>" +
-                                                                "Arrival time: " + schedule.ArrivalTime.ToString(@"hh\:mm") + "<br>" +
-                                                                "Provider discount: " + schedule.Discount + "%" + "<br>" +
-                                                                "Base price: " + newPrice + " RSD (the price remains the same if you paid via MasterCard)<br>" +
-                                                                "Departure date: " + u.BusLine.DepartureDate.ToString("dd/MM/yyyy") + "<br><br>" +
-                                                                "Your money will be returned soon if you paid with MasterCard.");
-                    });
-                    emailThread.IsBackground = true;
-                    emailThread.Start();
-                }
+                //foreach (var u in tickets)
+                //{
+                //    Thread emailThread = new Thread(async () =>
+                //    {
+                //        _emailService.SendEmail(u.User.Email, "Sorry, provider updated bus line for your trip", "New trip information:<br>" +
+                //                                                "Departure: " + u.BusLine.Schedule.Departure + "<br>" +
+                //                                                "Arrival: " + u.BusLine.Schedule.Arrival + "<br>" +
+                //                                                "Departure time: " + schedule.DepartureTime.ToString(@"hh\:mm") + "<br>" +
+                //                                                "Arrival time: " + schedule.ArrivalTime.ToString(@"hh\:mm") + "<br>" +
+                //                                                "Provider discount: " + schedule.Discount + "%" + "<br>" +
+                //                                                "Base price: " + newPrice + " RSD (the price remains the same if you paid via MasterCard)<br>" +
+                //                                                "Departure date: " + u.BusLine.DepartureDate.ToString("dd/MM/yyyy") + "<br><br>" +
+                //                                                "Your money will be returned soon if you paid with MasterCard.");
+                //    });
+                //    emailThread.IsBackground = true;
+                //    emailThread.Start();
+                //}
             }
             else if (scheduleDTO.AvailableSeats != schedule.AvailableSeats)
             {
@@ -328,25 +356,25 @@ namespace RouteService.Controllers
 
                             s.PricePerKilometer = scheduleDTO.PricePerKilometer;
 
-                            var tickets = await _schedulesService.GetTicketsToNotifyForUpdate(schedule.Id);
+                            //var tickets = await _schedulesService.GetTicketsToNotifyForUpdate(schedule.Id);
 
-                            foreach (var u in tickets)
-                            {
-                                Thread emailThread = new Thread(async () =>
-                                {
-                                    _emailService.SendEmail(u.User.Email, "Sorry, provider updated bus line for your trip", "New trip information:<br>" +
-                                                                            "Departure: " + u.BusLine.Schedule.Departure + "<br>" +
-                                                                            "Arrival: " + u.BusLine.Schedule.Arrival + "<br>" +
-                                                                            "Departure time: " + schedule.DepartureTime.ToString(@"hh\:mm") + "<br>" +
-                                                                            "Arrival time: " + schedule.ArrivalTime.ToString(@"hh\:mm") + "<br>" +
-                                                                            "Provider discount: " + schedule.Discount + "%" + "<br>" +
-                                                                            "Base price: " + newPrice + " RSD (the price remains the same if you paid via MasterCard)<br>" +
-                                                                            "Departure date: " + u.BusLine.DepartureDate.ToString("dd/MM/yyyy") + "<br><br>" +
-                                                                            "Your money will be returned soon if you paid with MasterCard.");
-                                });
-                                emailThread.IsBackground = true;
-                                emailThread.Start();
-                            }
+                            //foreach (var u in tickets)
+                            //{
+                            //    Thread emailThread = new Thread(async () =>
+                            //    {
+                            //        _emailService.SendEmail(u.User.Email, "Sorry, provider updated bus line for your trip", "New trip information:<br>" +
+                            //                                                "Departure: " + u.BusLine.Schedule.Departure + "<br>" +
+                            //                                                "Arrival: " + u.BusLine.Schedule.Arrival + "<br>" +
+                            //                                                "Departure time: " + schedule.DepartureTime.ToString(@"hh\:mm") + "<br>" +
+                            //                                                "Arrival time: " + schedule.ArrivalTime.ToString(@"hh\:mm") + "<br>" +
+                            //                                                "Provider discount: " + schedule.Discount + "%" + "<br>" +
+                            //                                                "Base price: " + newPrice + " RSD (the price remains the same if you paid via MasterCard)<br>" +
+                            //                                                "Departure date: " + u.BusLine.DepartureDate.ToString("dd/MM/yyyy") + "<br><br>" +
+                            //                                                "Your money will be returned soon if you paid with MasterCard.");
+                            //    });
+                            //    emailThread.IsBackground = true;
+                            //    emailThread.Start();
+                            //}
                         }
 
                         await UpdateBusLineAvailableSeats(availableSeatsDifference, s.Id);

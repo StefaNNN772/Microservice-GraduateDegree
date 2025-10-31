@@ -17,7 +17,7 @@ namespace ReservationService.Clients
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/api/BusLines/{busLineId}");
+                var response = await _httpClient.GetAsync($"busLines/getBusLine/{busLineId}");
 
                 if (!response.IsSuccessStatusCode)
                     return null;
@@ -47,6 +47,60 @@ namespace ReservationService.Clients
             }
         }
 
+        public async Task<BusLineDTO> GetBusSeats(long busLineId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"busLines/getSeats/{busLineId}");
+
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                return await response.Content.ReadFromJsonAsync<BusLineDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error calling RouteService: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<ScheduleDTO> GetSchedule(long id)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"schedules/getSchedule/{id}");
+
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                return await response.Content.ReadFromJsonAsync<ScheduleDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error calling RouteService: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<List<ScheduleDTO>> GetSchedules(string id, string departure)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"schedules/getSchedules/{id}/{departure}");
+
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                return await response.Content.ReadFromJsonAsync<List<ScheduleDTO>>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error calling RouteService: {ex.Message}");
+                return null;
+            }
+        }
+
         public async Task<List<long>> GetTicketUserIdsForScheduleAsync(long scheduleId)
         {
             try
@@ -62,6 +116,24 @@ namespace ReservationService.Clients
             {
                 Console.WriteLine($"Error getting ticket users: {ex.Message}");
                 return new List<long>();
+            }
+        }
+
+        public async Task<List<BusLineDTO>> GetBusLines(long id)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"busLines/getBusLines/by-scheduleId/{id}");
+
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                return await response.Content.ReadFromJsonAsync<List<BusLineDTO>>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error calling RouteService: {ex.Message}");
+                return null;
             }
         }
     }

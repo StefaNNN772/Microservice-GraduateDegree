@@ -43,6 +43,20 @@ namespace RouteService.Services
             return schedulesList;
         }
 
+        public async Task<Schedules> GetScheduleById(long id)
+        {
+            var schedule = await _scheduleRepository.GetScheduleById(id);
+
+            return schedule;
+        }
+
+        public async Task<List<Schedules>> GetScheduleByIdAndDeparture(string id, string departure)
+        {
+            var schedule = await _scheduleRepository.GetScheduleByIdAndDeparture(id, departure);
+
+            return schedule;
+        }
+
         public async Task<bool> DeleteSchedule(long id)
         {
             return await _scheduleRepository.DeleteScheduleById(id);

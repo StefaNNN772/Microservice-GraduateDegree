@@ -7,6 +7,7 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 using Microsoft.AspNetCore.Mvc;
 using QRCoder;
+using ReservationService.Clients.Interfaces;
 using ReservationService.DTOs;
 using ReservationService.Helpers;
 using ReservationService.Models;
@@ -22,15 +23,17 @@ namespace ReservationService.Controllers
         private readonly BusReservationService _busReservationService;
         private readonly Services.TokenService _tokenService;
         private readonly EmailService _emailService;
-        private readonly UserService _userService;
+        private readonly IAuthServiceClient _authServiceClient;
+        private readonly IRouteServiceClient _routeServiceClient;
 
         public BusReservationController(BusReservationService busReservationService, Services.TokenService tokenService,
-                                        EmailService emailService, UserService userService, IConfiguration configuration)
+                                        EmailService emailService, IAuthServiceClient authServiceClient, IConfiguration configuration, IRouteServiceClient routeServiceClient)
         {
             this._busReservationService = busReservationService;
             this._tokenService = tokenService;
             this._emailService = emailService;
-            this._userService = userService;
+            this._authServiceClient = authServiceClient;
+            this._routeServiceClient = routeServiceClient;
 
             StripeConfiguration.ApiKey = configuration["StripeAPI:ApiKey"];
         }
@@ -50,14 +53,14 @@ namespace ReservationService.Controllers
 
             UserTokenDTO userDto = _tokenService.DecodeToken(token);
 
-            var user = await _userService.FindUserAsync(userDto.Email);
+            var user = await _authServiceClient.GetUserByEmailAsync(userDto.Email);
 
             if (user == null)
             {
                 return StatusCode(400, "An error ocurred while searching for user!");
             }
 
-            var busLine = await _busReservationService.GetBusLine(id);
+            var busLine = await _routeServiceClient.GetBusLineAsync(id);
 
             if (busLine == null)
             {
@@ -138,9 +141,11 @@ namespace ReservationService.Controllers
             UserTokenDTO userDto = _tokenService.DecodeToken(token);
 
             // Here we get list of reserved seats and capacity of bus
-            var busSeats = await _busReservationService.GetBusSeats(data.Id);
+            var busSeats = await _routeServiceClient.GetBusSeats(data.Id);
 
-            if (busSeats.Item2.AvailableSeats < data.NumberOfPassengers)
+            var busSeatsNumbers = await _busReservationService.GetBusLineSeats(data.Id);
+
+            if (busSeats.AvailableSeats < data.NumberOfPassengers)
             {
                 return StatusCode(400, "Sorry, available seats changed. Please change number of passengers.");
             }
@@ -157,9 +162,9 @@ namespace ReservationService.Controllers
 
             int num = data.NumberOfPassengers;
 
-            for (int i = 1; i <= busSeats.Item2.Schedule.AvailableSeats; i++)
+            for (int i = 1; i <= busSeats.Schedule.AvailableSeats; i++)
             {
-                if (!busSeats.Item1.Contains(i) && num > 0)
+                if (!busSeatsNumbers.Contains(i) && num > 0)
                 {
                     numberOfSeats.Add(i);
                     num--;
@@ -189,7 +194,7 @@ namespace ReservationService.Controllers
                         "Attached is your bus ticket containing the basic information about trip and a QR code.\n" +
                         "Thank you for purchase.\n\n" +
                         "Kind regards,\n" +
-                        "SerbiaBus", ticket, numberOfSeats, busSeats.Item2);
+                        "SerbiaBus", ticket, numberOfSeats, busSeats);
                 });
                 emailThread.IsBackground = true;
                 emailThread.Start();
@@ -285,16 +290,19 @@ namespace ReservationService.Controllers
         }
 
         private bool SendQRCodePdf(string recipientEmail, string qrData, string emailSubject,
-                                string emailBody, Ticket ticket, List<int> numberOfSeats, BusLine busLine)
+                                string emailBody, Ticket ticket, List<int> numberOfSeats, BusLineDTO busLine)
         {
             try
             {
                 // Create QR Code in bytes
                 byte[] qrCodeBytes = CreateQRCode(qrData);
 
+                var departureTime = TimeSpan.Parse(busLine.Schedule.DepartureTime);
+                var arrivalTime = TimeSpan.Parse(busLine.Schedule.ArrivalTime);
+
                 string pdfDescription = "Departure: " + busLine.Schedule.Departure + "\nArrival: " + busLine.Schedule.Arrival +
-                                        "\nDeparture time: " + busLine.Schedule.DepartureTime.ToString(@"hh\:mm") +
-                                        "\nArrival time: " + busLine.Schedule.ArrivalTime.ToString(@"hh\:mm") +
+                                        "\nDeparture time: " + departureTime.ToString(@"hh\:mm") +
+                                        "\nArrival time: " + arrivalTime.ToString(@"hh\:mm") +
                                         "\nPayment method: " + ticket.PaymentMethod + "\nPrice: " + ticket.Price + " RSD" +
                                         "\nPurchase time: " + ticket.PurchaseTime.ToString() + "\nNumber of seats: ";
                 for (int i = 0; i < numberOfSeats.Count; i++)

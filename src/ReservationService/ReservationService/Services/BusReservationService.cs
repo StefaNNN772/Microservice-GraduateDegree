@@ -13,14 +13,9 @@ namespace ReservationService.Services
             this._busReservationRepository = busReservationRepository;
         }
 
-        public async Task<BusLineDTO> GetBusLine(long id)
+        public async Task<List<int>> GetBusLineSeats(long id)
         {
-            return await _busReservationRepository.GetBusLine(id);
-        }
-
-        public async Task<Tuple<List<int>, BusLine>> GetBusSeats(long id)
-        {
-            return await _busReservationRepository.GetBusSeats(id);
+            return await _busReservationRepository.GetBusLineSeats(id);
         }
 
         public async Task<bool> AddReservation(Ticket ticket, List<int> numOfSeat)
@@ -30,12 +25,12 @@ namespace ReservationService.Services
 
         public async Task<List<Ticket>> UserToNotify(long id)
         {
-            return await _scheduleRepository.UserToNotify(id);
+            return await _busReservationRepository.UserToNotify(id);
         }
 
         public async Task<List<Ticket>> GetTicketsToNotifyForUpdate(long id)
         {
-            return await _scheduleRepository.GetTicketsToNotifyForUpdate(id);
+            return await _busReservationRepository.GetTicketsToNotifyForUpdate(id);
         }
     }
 }

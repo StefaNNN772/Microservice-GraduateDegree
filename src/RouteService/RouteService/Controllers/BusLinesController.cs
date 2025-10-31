@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RouteService.DTOs;
+using RouteService.Models;
 using RouteService.Services;
 
 namespace RouteService.Controllers
@@ -53,6 +54,33 @@ namespace RouteService.Controllers
             }
 
             return Ok(busLinesDto);
+        }
+
+        [HttpGet("busLines/getBusLine/{busLineId}")]
+        [Produces("application/json")]
+        public async Task<ActionResult<BusLineDTO>> GetBusLine(long busLineId)
+        {
+            var busLineDto = await _busLinesService.GetBusLine(busLineId);
+
+            return Ok(busLineDto);
+        }
+
+        [HttpGet("busLines/getBusLines/by-scheduleId/{scheduleId}")]
+        [Produces("application/json")]
+        public async Task<ActionResult<List<BusLine>>> GetBusLinesByScheduleId(long scheduleId)
+        {
+            var busLinesDto = await _busLinesService.GetBusLinesByScheduleId(scheduleId);
+
+            return Ok(busLinesDto);
+        }
+
+        [HttpGet("busLines/getSeats/{id}")]
+        [Produces("application/json")]
+        public async Task<ActionResult<BusLine>> GetSeats(long id)
+        {
+            var busLineDto = await _busLinesService.GetBusSeats(id);
+
+            return Ok(busLineDto);
         }
 
         private async Task<string> GetProviderName(long id)

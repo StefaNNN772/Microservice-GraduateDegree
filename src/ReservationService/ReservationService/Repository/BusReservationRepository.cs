@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ReservationService.Clients.Interfaces;
 using ReservationService.Data;
 using ReservationService.DTOs;
 using ReservationService.Models;
@@ -9,41 +10,17 @@ namespace ReservationService.Repository
     public class BusReservationRepository
     {
         private readonly AppDbContext _context;
+        private readonly IRouteServiceClient _routeServiceClient;
 
-        public BusReservationRepository(AppDbContext context)
+        public BusReservationRepository(AppDbContext context, IRouteServiceClient routeServiceClient)
         {
             this._context = context;
+            this._routeServiceClient = routeServiceClient;
         }
 
-        public async Task<BusLineDTO> GetBusLine(long id)
+        public async Task<List<int>> GetBusLineSeats(long id)
         {
-            var busLine = await _context.BusLines.Include(b => b.Schedule)
-                .ThenInclude(p => p.Provider)
-                .FirstOrDefaultAsync(b => b.Id == id);
-
-            BusLineDTO busLineDto = new BusLineDTO
-            {
-                Id = busLine.Id,
-                Departure = busLine.Schedule.Departure,
-                Arrival = busLine.Schedule.Arrival,
-                Discount = busLine.Schedule.Discount,
-                DepartureDate = busLine.DepartureDate.ToString("dd/MM/yyyy"),
-                DepartureTime = busLine.Schedule.DepartureTime.ToString(@"hh\:mm"),
-                ArrivalTime = busLine.Schedule.ArrivalTime.ToString(@"hh\:mm"),
-                Provider = busLine.Schedule.Provider.Name,
-                AvailableSeats = busLine.AvailableSeats,
-                Price = busLine.Schedule.Price,
-            };
-
-            return busLineDto;
-        }
-
-        public async Task<Tuple<List<int>, BusLine>> GetBusSeats(long id)
-        {
-            var reserverSeats = await _context.ReservedSeats.Where(b => b.BusLineId == id).Select(b => b.SeatNumber).ToListAsync();
-            var busLine = await _context.BusLines.Include(b => b.Schedule).Where(b => b.Id == id).FirstAsync();
-
-            return Tuple.Create(reserverSeats, busLine);
+            return await _context.ReservedSeats.Where(b => b.BusLineId == id).Select(b => b.SeatNumber).ToListAsync();
         }
 
         public async Task<bool> AddReservation(Ticket ticket, List<int> numOfSeats)
@@ -75,7 +52,7 @@ namespace ReservationService.Repository
                 }
             }
 
-            var busLine = await _context.BusLines.FindAsync(ticket.BusLineId);
+            var busLine = await _routeServiceClient.GetBusLineAsync(ticket.BusLineId);
 
             if (busLine.AvailableSeats != null)
             {
@@ -89,25 +66,25 @@ namespace ReservationService.Repository
 
         public async Task<List<Ticket>> UserToNotify(long id)
         {
-            var schedule = await _context.Schedules.FindAsync(id);
+            var schedule = await _routeServiceClient.GetSchedule(id);
 
-            var schedulesList = await _context.Schedules.Where(s => s.BusLineId == schedule.BusLineId &&
-                                                                (s.Departure == schedule.Departure || s.Arrival == schedule.Departure)).ToListAsync();
+            var schedulesList = await _routeServiceClient.GetSchedules(schedule.BusLineId, schedule.Departure);
 
             List<Ticket> ticketsToNotify = new List<Ticket>();
 
             foreach (var s in schedulesList)
             {
-                var busLines = await _context.BusLines.Where(b => b.ScheduleId == s.Id).ToListAsync();
+                var busLines = await _routeServiceClient.GetBusLines(s.Id);
 
                 foreach (var b in busLines)
                 {
                     var tickets = await _context.Tickets
-                            .Include(t => t.User)
-                            .Include(t => t.BusLine)
-                                .ThenInclude(bl => bl.Schedule)
+                            //.Include(t => t.User)
+                            //.Include(t => t.BusLine)
+                                //.ThenInclude(bl => bl.Schedule)
                             .Where(t => t.BusLineId == b.Id)
                             .ToListAsync();
+
 
                     foreach (var t in tickets)
                     {
@@ -121,16 +98,16 @@ namespace ReservationService.Repository
 
         public async Task<List<Ticket>> GetTicketsToNotifyForUpdate(long id)
         {
-            var busLines = await _context.BusLines.Where(b => b.ScheduleId == id).ToListAsync();
+            var busLines = await _routeServiceClient.GetBusLines(id);
 
             List<Ticket> ticketsToNotify = new List<Ticket>();
 
             foreach (var b in busLines)
             {
                 var tickets = await _context.Tickets
-                        .Include(t => t.User)
-                        .Include(t => t.BusLine)
-                            .ThenInclude(bl => bl.Schedule)
+                        //.Include(t => t.User)
+                        //.Include(t => t.BusLine)
+                            //.ThenInclude(bl => bl.Schedule)
                         .Where(t => t.BusLineId == b.Id)
                         .ToListAsync();
 

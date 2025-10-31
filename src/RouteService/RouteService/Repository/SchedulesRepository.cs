@@ -26,6 +26,19 @@ namespace RouteService.Repository
             return await _context.Schedules.Where(u => u.ProviderId == providerId).ToListAsync();
         }
 
+        public async Task<Schedules> GetScheduleById(long id)
+        {
+            return await _context.Schedules.Where(u => u.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Schedules>> GetScheduleByIdAndDeparture(string id, string departure)
+        {
+            var schedulesList = await _context.Schedules.Where(s => s.BusLineId == id &&
+                                                                (s.Departure == departure || s.Arrival == departure)).ToListAsync();
+
+            return schedulesList;
+        }
+
         public async Task<bool> DeleteScheduleById(long id)
         {
             var schedule = await _context.Schedules.FindAsync(id);

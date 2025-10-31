@@ -30,5 +30,10 @@ namespace AuthService.Repository
             await _context.SaveChangesAsync();
             return provider;
         }
+
+        public async Task<Provider> FindProviderById(long id)
+        {
+            return await _context.Providers.FirstOrDefaultAsync(u => u.Id == id);
+        }
     }
 }

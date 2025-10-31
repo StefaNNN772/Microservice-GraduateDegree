@@ -1,19 +1,15 @@
-using Ocelot.DependencyInjection;
-using Ocelot.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 
-var jwtSecret = builder.Configuration["JWT:Secret"] ?? "ThisIsAVeryLongSecretKeyThatIsAtLeast64BytesLongForHmacSha512";
-var jwtIssuer = builder.Configuration["JWT:Issuer"] ?? "serbiaBus";
-var jwtAudience = builder.Configuration["JWT:Audience"] ?? "web";
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer("Bearer", options =>
+    .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -21,9 +17,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtIssuer,
-            ValidAudience = jwtAudience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidAudience = builder.Configuration["JWT:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
         };
     });
 
@@ -31,13 +27,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.WithOrigins(
-                builder.Configuration.GetSection("Cors:Origins").Get<string[]>()
-                ?? new[] { "http://localhost:4200" }
-            )
-              .AllowAnyHeader()
+        policy.AllowAnyOrigin()
               .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowAnyHeader();
     });
 });
 
@@ -47,8 +39,11 @@ var app = builder.Build();
 
 app.UseCors("AllowAngularApp");
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 await app.UseOcelot();
 
-Console.WriteLine("API Gateway is running on http://localhost:5000");
+Console.WriteLine("API Gateway running on http://localhost:5000");
 
 app.Run();

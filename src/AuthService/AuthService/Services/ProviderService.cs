@@ -33,6 +33,18 @@ namespace AuthService.Services
             return null;
         }
 
+        public async Task<Provider> FindProviderById(long id)
+        {
+            var provider = await _providerRepository.FindProviderById(id);
+
+            if (provider != null)
+            {
+                return provider;
+            }
+
+            return null;
+        }
+
         public async Task<Provider?> CreateProviderAsync(AddProviderDTO provider)
         {
             var newProvider = new Provider

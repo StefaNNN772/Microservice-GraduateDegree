@@ -1,13 +1,14 @@
-﻿namespace ReservationService.DTOs
+﻿using ReservationService.Models;
+
+namespace ReservationService.DTOs
 {
     public class UserDTO
     {
         public long Id { get; set; }
-
-        public string Name { get; set; }
-
-        public string LastName { get; set; }
-
         public string Email { get; set; }
+        public string Name { get; set; }
+        public string? LastName { get; set; }
+        public DiscountType DiscountType { get; set; }
+        public DiscountStatus DiscountStatus { get; set; }
     }
 }

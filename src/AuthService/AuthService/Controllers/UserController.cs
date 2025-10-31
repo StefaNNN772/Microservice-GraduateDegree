@@ -28,8 +28,6 @@ namespace AuthService.Controllers
             _providerService = providerService;
         }
 
-
-
         [HttpPost("login")]
         [Produces("application/json")]
         public async Task<IActionResult> Login([FromBody] UserCredentials credentials)
@@ -110,6 +108,19 @@ namespace AuthService.Controllers
         public async Task<ActionResult<User>> GetUserById(long userId)
         {
             var user = await _userService.FindUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
+        [HttpGet("users/by-email/{email}")]
+        public async Task<ActionResult<User>> GetUserEmailId(string email)
+        {
+            var user = await _userService.FindUserAsync(email);
 
             if (user == null)
             {
