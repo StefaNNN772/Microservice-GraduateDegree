@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using ReservationService.Clients.Interfaces;
+using ReservationService.Clients;
 using ReservationService.Data;
 using ReservationService.Helpers;
 using ReservationService.Repository;
@@ -18,6 +20,9 @@ builder.Services.AddScoped<BusReservationRepository>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<BusReservationService>();
+
+builder.Services.AddHttpClient<IAuthServiceClient, AuthServiceClient>();
+builder.Services.AddHttpClient<IRouteServiceClient, RouteServiceClient>();
 
 //builder.Services.AddHttpClient<IAuthServiceClient, AuthServiceClient>();
 //builder.Services.AddHttpClient<IRouteServiceClient, RouteServiceClient>();

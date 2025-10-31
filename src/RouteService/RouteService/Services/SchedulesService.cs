@@ -78,14 +78,14 @@ namespace RouteService.Services
             return await _scheduleRepository.UpdateBusLinesAvailableSeats(availableSeatsDifference, scheduleId);
         }
 
-        public async Task<List<Ticket>> UserToNotify(long id)
-        {
-            return await _scheduleRepository.UserToNotify(id);
-        }
+        //public async Task<List<Ticket>> UserToNotify(long id)
+        //{
+        //    return await _scheduleRepository.UserToNotify(id);
+        //}
 
-        public async Task<List<Ticket>> GetTicketsToNotifyForUpdate(long id)
-        {
-            return await _scheduleRepository.GetTicketsToNotifyForUpdate(id);
-        }
+        //public async Task<List<Ticket>> GetTicketsToNotifyForUpdate(long id)
+        //{
+        //    return await _scheduleRepository.GetTicketsToNotifyForUpdate(id);
+        //}
     }
 }

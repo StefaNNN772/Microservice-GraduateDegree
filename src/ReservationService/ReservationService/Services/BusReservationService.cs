@@ -27,5 +27,15 @@ namespace ReservationService.Services
         {
             return await _busReservationRepository.AddReservation(ticket, numOfSeat);
         }
+
+        public async Task<List<Ticket>> UserToNotify(long id)
+        {
+            return await _scheduleRepository.UserToNotify(id);
+        }
+
+        public async Task<List<Ticket>> GetTicketsToNotifyForUpdate(long id)
+        {
+            return await _scheduleRepository.GetTicketsToNotifyForUpdate(id);
+        }
     }
 }

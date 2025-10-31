@@ -5,12 +5,10 @@ namespace RouteService.Services
 {
     public class FavouritesService
     {
-        private readonly UserRepository _userRepository;
         private readonly FavouritesRepository _favouritesRepository;
 
-        public FavouritesService(UserRepository userRepository, FavouritesRepository favouritesRepository)
+        public FavouritesService(FavouritesRepository favouritesRepository)
         {
-            _userRepository = userRepository;
             _favouritesRepository = favouritesRepository;
         }
 

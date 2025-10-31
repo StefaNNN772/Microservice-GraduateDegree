@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using RouteService.Clients.Interfaces;
+using RouteService.Clients;
 using RouteService.Data;
 using RouteService.Helpers;
 using RouteService.Repository;
@@ -22,6 +24,8 @@ builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<BusLinesService>();
 builder.Services.AddScoped<SchedulesService>();
 builder.Services.AddScoped<FavouritesService>();
+
+builder.Services.AddHttpClient<IAuthServiceClient, AuthServiceClient>();
 
 //builder.Services.AddHttpClient<IAuthServiceClient, AuthServiceClient>();
 
