@@ -85,7 +85,7 @@ services:
 
   routeservice:
     build:
-      context: ./src/RouteService
+      context: ./src/RouteService/RouteService
       dockerfile: Dockerfile
     container_name: routeservice
     ports:
@@ -110,7 +110,7 @@ services:
 
   reservationservice:
     build:
-      context: ./src/ReservationService
+      context: ./src/ReservationService/ReservationService
       dockerfile: Dockerfile
     container_name: reservationservice
     ports:
@@ -140,7 +140,7 @@ services:
   # ==================== API GATEWAY ====================
   apigateway:
     build:
-      context: ./src/ApiGateway
+      context: ./src/ApiGateway/ApiGateway
       dockerfile: Dockerfile
     container_name: apigateway
     ports:
