@@ -1,65 +1,182 @@
 version: '3.8'
 
 services:
-  postgres:
+  # ==================== DATABASES ====================
+  postgres-auth:
     image: postgres:15
+    container_name: postgres-auth
     environment:
-      POSTGRES_DB: authservice_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: kalabunga
+      POSTGRES_DB: authdb
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres-auth-data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - auth-network
 
+  postgres-route:
+    image: postgres:15
+    container_name: postgres-route
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: kalabunga
+      POSTGRES_DB: routedb
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-route-data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-reservation:
+    image: postgres:15
+    container_name: postgres-reservation
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: kalabunga
+      POSTGRES_DB: reservationdb
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-reservation-data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==================== MICROSERVICES ====================
   authservice:
     build:
       context: ./src/AuthService/AuthService
       dockerfile: Dockerfile
+    container_name: authservice
     ports:
       - "8081:8081"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:8081
-      - ConnectionStrings__DefaultConnection=Host=postgres;Database=authservice_db;Username=postgres;Password=kalabunga
+      - ConnectionStrings__DefaultConnection=Host=postgres-auth;Port=5432;Database=authdb;Username=postgres;Password=kalabunga
       - Cors__Origins__0=http://localhost:4200
+      - Cors__Origins__1=http://localhost:5000
       - Email__SMTP=smtp.gmail.com
       - Email__Port=587
-      - Email__SenderEmail=schneiderelectricinternship@gmail.com
-      - Email__SenderPassword=aeoo vuqm gifg pnsw
-      - UPLOAD_PATH=/app/uploads
-    volumes:
-      - ./uploads:/app/uploads
+      - Email__SenderEmail=your-email@gmail.com
+      - Email__SenderPassword=your-app-password
     depends_on:
-      postgres:
+      postgres-auth:
         condition: service_healthy
-    restart: on-failure
     networks:
-      - auth-network
+      - microservices-network
+    restart: unless-stopped
 
+  routeservice:
+    build:
+      context: ./src/RouteService
+      dockerfile: Dockerfile
+    container_name: routeservice
+    ports:
+      - "8082:8082"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres-route;Port=5432;Database=routedb;Username=postgres;Password=kalabunga
+      - Services__AuthService=http://authservice:8081
+      - Cors__Origins__0=http://localhost:4200
+      - Cors__Origins__1=http://localhost:5000
+      - JWT__Secret=ThisIsAVeryLongSecretKeyThatIsAtLeast64BytesLongForHmacSha512
+      - JWT__Issuer=serbiaBus
+      - JWT__Audience=web
+    depends_on:
+      postgres-route:
+        condition: service_healthy
+      authservice:
+        condition: service_started
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  reservationservice:
+    build:
+      context: ./src/ReservationService
+      dockerfile: Dockerfile
+    container_name: reservationservice
+    ports:
+      - "8083:8083"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres-reservation;Port=5432;Database=reservationdb;Username=postgres;Password=kalabunga
+      - Services__AuthService=http://authservice:8081
+      - Services__RouteService=http://routeservice:8082
+      - Cors__Origins__0=http://localhost:4200
+      - Cors__Origins__1=http://localhost:5000
+      - JWT__Secret=ThisIsAVeryLongSecretKeyThatIsAtLeast64BytesLongForHmacSha512
+      - JWT__Issuer=serbiaBus
+      - JWT__Audience=web
+      - StripeAPI__ApiKey=your-stripe-api-key
+    depends_on:
+      postgres-reservation:
+        condition: service_healthy
+      authservice:
+        condition: service_started
+      routeservice:
+        condition: service_started
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  # ==================== API GATEWAY ====================
+  apigateway:
+    build:
+      context: ./src/ApiGateway
+      dockerfile: Dockerfile
+    container_name: apigateway
+    ports:
+      - "5000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - JWT__Secret=ThisIsAVeryLongSecretKeyThatIsAtLeast64BytesLongForHmacSha512
+      - JWT__Issuer=serbiaBus
+      - JWT__Audience=web
+    depends_on:
+      - authservice
+      - routeservice
+      - reservationservice
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  # ==================== FRONTEND ====================
   frontend:
     build:
       context: ./srbijabus-frontend
       dockerfile: Dockerfile
+    container_name: frontend
     ports:
       - "4200:4200"
-    environment:
-      - API_URL=http://localhost:8081/
     depends_on:
-      - authservice
+      - apigateway
     networks:
-      - auth-network
+      - microservices-network
+    restart: unless-stopped
 
 volumes:
-  postgres_data:
+  postgres-auth-data:
+  postgres-route-data:
+  postgres-reservation-data:
 
 networks:
-  auth-network:
+  microservices-network:
     driver: bridge
