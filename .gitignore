@@ -23,6 +23,7 @@ app.db
 .vs/
 *.sln
 uploads
+srbijabus-backend
 
 # Entity Framework Migrations
 Migrations/

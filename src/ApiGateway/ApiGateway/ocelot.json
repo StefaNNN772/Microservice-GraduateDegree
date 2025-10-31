@@ -64,10 +64,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/users/by-email/{email}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/users/update/{userId}",
@@ -354,7 +351,7 @@
       }
     },
 
-    // ==================== RESERVATION SERVICE - Bus Reservations ====================
+    // ==================== RESERVATION SERVICE ====================
     {
       "DownstreamPathTemplate": "/busReservation/getBusLine/{id}",
       "DownstreamScheme": "http",
@@ -402,6 +399,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5000"
+    "BaseUrl": "http://+:80"
   }
 }
