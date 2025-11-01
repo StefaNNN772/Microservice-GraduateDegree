@@ -1,5 +1,6 @@
 using AuthService.Data;
 using AuthService.Helpers;
+using AuthService.Models;
 using AuthService.Repository;
 using AuthService.Services;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +43,35 @@ using (var scope = app.Services.CreateScope())
     {
         context.Database.Migrate();
         Console.WriteLine("Database migration completed successfully.");
+
+        if (!context.Users.Any(u => u.Email == "slazarevic772@gmail.com"))
+        {
+            var adminUser = new User
+            {
+                Name = "Stefan",
+                LastName = "Lazarevic",
+                Email = "slazarevic772@gmail.com",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("kalabunga"),
+                Birthday = new DateTime(2002, 03, 21),
+                Role = UserRole.Admin,
+                DiscountType = null,
+                DiscountStatus = DiscountStatus.NoRequest,
+                DiscountValidUntil = DateTime.MinValue,
+                DiscountDocumentPath = null,
+                ProfileImagePath = null
+            };
+
+            context.Users.Add(adminUser);
+            context.SaveChanges();
+
+            Console.WriteLine("Admin user created successfully!");
+            Console.WriteLine("Email: admin@serbijabus.com");
+            Console.WriteLine("Password: admin123");
+        }
+        else
+        {
+            Console.WriteLine("Admin user already exists.");
+        }
     }
     catch (Exception ex)
     {

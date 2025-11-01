@@ -10,6 +10,8 @@ RUN dotnet build "RouteService.csproj" -c Release -o /app/build
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
 
+RUN if [ ! -d "Migrations" ]; then dotnet ef migrations add InitialCreate; fi
+
 RUN dotnet publish "RouteService.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0

@@ -33,11 +33,11 @@ namespace RouteService.Data
                 .Property(s => s.ProviderId)
                 .IsRequired();
 
-            modelBuilder.Entity<BusLine>()
-                .HasOne<Schedules>()
-                .WithMany()
-                .HasForeignKey(bl => bl.ScheduleId)
-                .OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<BusLine>()
+            //    .HasOne<Schedules>()
+            //    .WithMany()
+            //    .HasForeignKey(bl => bl.ScheduleId)
+            //    .OnDelete(DeleteBehavior.Cascade);
 
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }

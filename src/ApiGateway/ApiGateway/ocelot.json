@@ -1,6 +1,6 @@
 {
   "Routes": [
-    // ==================== AUTH SERVICE - Authentication ====================
+    // ==================== AUTH SERVICE - Public Endpoints ====================
     {
       "DownstreamPathTemplate": "/login",
       "DownstreamScheme": "http",
@@ -10,7 +10,7 @@
           "Port": 8081
         }
       ],
-      "UpstreamPathTemplate": "/api/auth/login",
+      "UpstreamPathTemplate": "/api/login",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -22,11 +22,11 @@
           "Port": 8081
         }
       ],
-      "UpstreamPathTemplate": "/api/auth/register",
+      "UpstreamPathTemplate": "/api/register",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/google/login",
+      "DownstreamPathTemplate": "/auth/google/callback",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -34,11 +34,23 @@
           "Port": 8081
         }
       ],
-      "UpstreamPathTemplate": "/api/auth/google/login",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamPathTemplate": "/api/auth/google/callback",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/users/by-email/{email}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8081
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/by-email/{email}",
+      "UpstreamHttpMethod": [ "GET" ]
     },
 
-    // ==================== AUTH SERVICE - Users ====================
+    // ==================== AUTH SERVICE - Protected Endpoints ====================
     {
       "DownstreamPathTemplate": "/users/{userId}",
       "DownstreamScheme": "http",
@@ -53,18 +65,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }
-    },
-    {
-      "DownstreamPathTemplate": "/users/by-email/{email}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "authservice",
-          "Port": 8081
-        }
-      ],
-      "UpstreamPathTemplate": "/api/users/by-email/{email}",
-      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/users/update/{userId}",
@@ -171,6 +171,21 @@
         "AuthenticationProviderKey": "Bearer"
       }
     },
+    {
+      "DownstreamPathTemplate": "/users/delete-profile-image/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8081
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/delete-profile-image/{userId}",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
 
     // ==================== AUTH SERVICE - Providers ====================
     {
@@ -189,7 +204,7 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/providers/{providerId}",
+      "DownstreamPathTemplate": "/providers/providers/{providerId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -201,7 +216,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
 
-    // ==================== ROUTE SERVICE - Bus Lines ====================
+    // ==================== ROUTE SERVICE - Public Bus Lines ====================
     {
       "DownstreamPathTemplate": "/busLines/routes",
       "DownstreamScheme": "http",
@@ -227,7 +242,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
 
-    // ==================== ROUTE SERVICE - Schedules ====================
+    // ==================== ROUTE SERVICE - Protected Schedules ====================
     {
       "DownstreamPathTemplate": "/schedules/addSchedule",
       "DownstreamScheme": "http",
@@ -289,7 +304,7 @@
       }
     },
 
-    // ==================== ROUTE SERVICE - Favourites ====================
+    // ==================== ROUTE SERVICE - Protected Favourites ====================
     {
       "DownstreamPathTemplate": "/favourites/route/add",
       "DownstreamScheme": "http",
@@ -351,7 +366,7 @@
       }
     },
 
-    // ==================== RESERVATION SERVICE ====================
+    // ==================== RESERVATION SERVICE - Protected ====================
     {
       "DownstreamPathTemplate": "/busReservation/getBusLine/{id}",
       "DownstreamScheme": "http",
