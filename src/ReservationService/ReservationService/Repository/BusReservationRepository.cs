@@ -11,11 +11,13 @@ namespace ReservationService.Repository
     {
         private readonly AppDbContext _context;
         private readonly IRouteServiceClient _routeServiceClient;
+        private readonly IAuthServiceClient _authServiceClient;
 
-        public BusReservationRepository(AppDbContext context, IRouteServiceClient routeServiceClient)
+        public BusReservationRepository(AppDbContext context, IRouteServiceClient routeServiceClient, IAuthServiceClient authServiceClient)
         {
             this._context = context;
             this._routeServiceClient = routeServiceClient;
+            this._authServiceClient = authServiceClient;
         }
 
         public async Task<List<int>> GetBusLineSeats(long id)
@@ -79,15 +81,16 @@ namespace ReservationService.Repository
                 foreach (var b in busLines)
                 {
                     var tickets = await _context.Tickets
-                            //.Include(t => t.User)
-                            //.Include(t => t.BusLine)
-                                //.ThenInclude(bl => bl.Schedule)
                             .Where(t => t.BusLineId == b.Id)
                             .ToListAsync();
 
 
                     foreach (var t in tickets)
                     {
+                        var userDto = await _authServiceClient.GetUserByIdAsync(t.UserId);
+                        var buslineDto = await _routeServiceClient.GetBusLineAsync(t.BusLineId);
+                        var scheduleDto = await _routeServiceClient.GetSchedule(buslineDto.ScheduleId);
+
                         ticketsToNotify.Add(t);
                     }
                 }

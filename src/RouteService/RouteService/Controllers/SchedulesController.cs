@@ -62,7 +62,9 @@ namespace RouteService.Controllers
             }
 
             var token = authHeader.Substring("Bearer ".Length).Trim();
-
+            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
+            Console.WriteLine(token);
+            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
             UserTokenDTO user = _tokenService.DecodeToken(token);
             schedulesDto.ProviderId = user.Id;
 

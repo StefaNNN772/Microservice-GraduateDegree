@@ -5,7 +5,6 @@ using RouteService.Data;
 using RouteService.Helpers;
 using RouteService.Repository;
 using RouteService.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -24,6 +23,7 @@ builder.Services.AddScoped<FavouritesRepository>();
 
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<MapAPI>();
 builder.Services.AddScoped<BusLinesService>();
 builder.Services.AddScoped<SchedulesService>();
 builder.Services.AddScoped<FavouritesService>();
@@ -32,23 +32,46 @@ builder.Services.AddHttpClient<IAuthServiceClient, AuthServiceClient>();
 
 //builder.Services.AddHttpClient<IAuthServiceClient, AuthServiceClient>();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["JWT:Issuer"],
-            ValidAudience = builder.Configuration["JWT:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
-        };
-    });
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        var secret = builder.Configuration["JWT:Secret"];
+//        var issuer = builder.Configuration["JWT:Issuer"];
+//        var audience = builder.Configuration["JWT:Audience"];
 
-builder.Services.AddAuthorization();
+//        Console.WriteLine($"[ROUTE SERVICE] JWT Config:");
+//        Console.WriteLine($"  Secret Length: {secret?.Length ?? 0}");
+//        Console.WriteLine($"  Issuer: {issuer}");
+//        Console.WriteLine($"  Audience: {audience}");
+
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = true,
+//            ValidateAudience = true,
+//            ValidateLifetime = true,
+//            ValidateIssuerSigningKey = true,
+//            ValidIssuer = issuer,
+//            ValidAudience = audience,
+//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
+//        };
+
+//        options.Events = new JwtBearerEvents
+//        {
+//            OnAuthenticationFailed = context =>
+//            {
+//                Console.WriteLine($"[ROUTE SERVICE] Authentication FAILED!");
+//                Console.WriteLine($"  Exception: {context.Exception.Message}");
+//                return Task.CompletedTask;
+//            },
+//            OnTokenValidated = context =>
+//            {
+//                Console.WriteLine($"[ROUTE SERVICE] Token VALIDATED!");
+//                return Task.CompletedTask;
+//            }
+//        };
+//    });
+
+//builder.Services.AddAuthorization();
 
 builder.Services.AddCors(options =>
 {

@@ -25,7 +25,7 @@ namespace RouteService.Services
             new Claim(JwtRegisteredClaimNames.Sub, username),
             new Claim("id", userId.ToString()),
             new Claim("role", userRole.ToString()),
-            //new Claim(JwtRegisteredClaimNames.Aud, AUDIENCE_WEB),
+            new Claim(JwtRegisteredClaimNames.Aud, AUDIENCE_WEB),
             new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString(), ClaimValueTypes.DateTime),
         };
 
@@ -56,13 +56,16 @@ namespace RouteService.Services
         public UserTokenDTO DecodeToken(string token)
         {
             var handler = new JwtSecurityTokenHandler();
-
+            Console.WriteLine("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
             if (!handler.CanReadToken(token))
             {
                 throw new ArgumentException("Invalid token");
             }
 
+            Console.WriteLine("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
             var jwtToken = handler.ReadJwtToken(token);
+            Console.WriteLine(jwtToken);
+            Console.WriteLine("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
 
             var userId = Int32.Parse(jwtToken?.Claims?.FirstOrDefault(c => c.Type == "id")?.Value);
             var email = jwtToken?.Claims?.FirstOrDefault(c => c.Type == "sub")?.Value;

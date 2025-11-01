@@ -50,7 +50,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
 
-    // ==================== AUTH SERVICE - Protected Endpoints ====================
+    // ==================== AUTH SERVICE - Protected Endpoints (Token se prosleđuje) ====================
     {
       "DownstreamPathTemplate": "/users/{userId}",
       "DownstreamScheme": "http",
@@ -61,10 +61,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/users/{userId}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/users/update/{userId}",
@@ -76,10 +73,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/users/update/{userId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/users/request/discount/{userId}",
@@ -91,10 +85,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/users/request/discount/{userId}",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/users/discount-requests",
@@ -106,10 +97,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/users/discount-requests",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/users/update-discount-request/{userId}/{approved}",
@@ -121,10 +109,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/users/update-discount-request/{userId}/{approved}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/users/delete-discount-request/{userId}",
@@ -136,10 +121,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/users/delete-discount-request/{userId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/users/approved-discounts",
@@ -151,10 +133,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/users/approved-discounts",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/users/add-profile-image/{userId}",
@@ -166,10 +145,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/users/add-profile-image/{userId}",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/users/delete-profile-image/{userId}",
@@ -181,10 +157,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/users/delete-profile-image/{userId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "PUT" ]
     },
 
     // ==================== AUTH SERVICE - Providers ====================
@@ -198,10 +171,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/providers/add",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/providers/providers/{providerId}",
@@ -242,7 +212,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
 
-    // ==================== ROUTE SERVICE - Protected Schedules ====================
+    // ==================== ROUTE SERVICE - Schedules (Token se prosleđuje) ====================
     {
       "DownstreamPathTemplate": "/schedules/addSchedule",
       "DownstreamScheme": "http",
@@ -253,10 +223,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/schedules/addSchedule",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/schedules/getSchedules",
@@ -268,10 +235,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/schedules/getSchedules",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/schedules/{id}",
@@ -283,10 +247,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/schedules/{id}",
-      "UpstreamHttpMethod": [ "DELETE" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/schedules/updateSchedule/{id}",
@@ -298,13 +259,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/schedules/updateSchedule/{id}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "PUT" ]
     },
 
-    // ==================== ROUTE SERVICE - Protected Favourites ====================
+    // ==================== ROUTE SERVICE - Favourites (Token se prosleđuje) ====================
     {
       "DownstreamPathTemplate": "/favourites/route/add",
       "DownstreamScheme": "http",
@@ -315,10 +273,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/favourites/route/add",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/favourites/route/remove",
@@ -330,10 +285,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/favourites/route/remove",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/favourites/route/check",
@@ -345,10 +297,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/favourites/route/check",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/favourites/routes",
@@ -360,13 +309,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/favourites/routes",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "GET" ]
     },
 
-    // ==================== RESERVATION SERVICE - Protected ====================
+    // ==================== RESERVATION SERVICE (Token se prosleđuje) ====================
     {
       "DownstreamPathTemplate": "/busReservation/getBusLine/{id}",
       "DownstreamScheme": "http",
@@ -377,10 +323,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/busReservation/getBusLine/{id}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/busReservation/create-payment-intent",
@@ -392,10 +335,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/busReservation/create-payment-intent",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/busReservation/add",
@@ -407,10 +347,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/busReservation/add",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ],
   "GlobalConfiguration": {
