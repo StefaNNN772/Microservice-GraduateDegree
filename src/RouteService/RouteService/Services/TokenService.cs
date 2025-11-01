@@ -25,7 +25,7 @@ namespace RouteService.Services
             new Claim(JwtRegisteredClaimNames.Sub, username),
             new Claim("id", userId.ToString()),
             new Claim("role", userRole.ToString()),
-            new Claim(JwtRegisteredClaimNames.Aud, AUDIENCE_WEB),
+            //new Claim(JwtRegisteredClaimNames.Aud, AUDIENCE_WEB),
             new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString(), ClaimValueTypes.DateTime),
         };
 
