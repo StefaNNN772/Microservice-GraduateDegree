@@ -6,7 +6,6 @@ namespace RouteService.Helpers
     public class MapAPI
     {
         private readonly HttpClient _httpClient;
-        //private readonly string _apiKey = "5b3ce3597851110001cf624806b1c4ec9694495bb916687a8eb4dc19";
         private readonly string _apiKey;
 
         public MapAPI(HttpClient httpClient, IConfiguration configuration)
