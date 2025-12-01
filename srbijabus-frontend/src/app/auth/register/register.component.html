@@ -1,0 +1,48 @@
+<div class="register-container">
+
+  <div class="register-left">
+
+    <h2>Create Your Account 🚍</h2>
+    <p>Fill in the details to get started with your bus ticket dashboard</p>
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+      <div class="parts">
+      <div class="form-part">
+        <label for="name">Name</label>
+        <input type="text" id="name" formControlName="name" placeholder="Enter your name">
+
+        <label for="surname">Last Name</label>
+        <input type="text" id="surname" formControlName="lastname" placeholder="Enter your last name">
+
+        <label for="birthday">Birthday</label>
+        <input type="date" id="birthday" formControlName="birthday" placeholder="Enter your birthday">
+
+        <label for="profilePic">Profile Picture</label>
+        <input type="file" id="profilePic" (change)="onFileSelected($event)" accept="image/*">
+
+      </div>
+      <div class="form-part">
+        <label for="username">Email</label>
+        <input type="email" id="username" formControlName="username" placeholder="Enter your email">
+
+        <label for="password">Password</label>
+        <input type="password" id="password" formControlName="password" placeholder="Enter your password">
+      </div>
+      </div>
+      <button type="submit" class="btn btn-register" [disabled]="registerForm.invalid">Register</button>
+    </form>
+    <div class="google">
+      <p>--------------------------------- &nbsp;&nbsp;&nbsp;Or &nbsp;&nbsp;&nbsp;---------------------------------</p>
+      <button class="btn-google" (click)="googleRegister">Continue via Google Account</button>
+    </div>
+    <p>Already have an account? <a routerLink="/login">Sign In Now</a></p>
+  </div>
+
+  <div class="register-right">
+    <div class="register-info">
+      <h3>Why Register?</h3>
+      <p>Register now to easily book tickets, keep track of your purchases, and unlock more great features. Give it a try!</p>
+      <!--      <img src="assets/electric-tower.png" alt="Logo" class="logo">-->
+    </div>
+  </div>
+
+</div>

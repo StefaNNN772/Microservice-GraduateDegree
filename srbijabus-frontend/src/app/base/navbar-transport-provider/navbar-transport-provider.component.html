@@ -1,0 +1,31 @@
+<mat-toolbar color="primary">
+  <h1 class="title">🚍</h1>
+  <h1 class="title">SerbiaBus </h1>
+  <span class="spacer"></span>
+  <mat-icon class="icon">
+    <span class="material-icons-outlined">menu</span>
+  </mat-icon>
+
+  <button mat-button type="button" class="text1" [matMenuTriggerFor]="accountMenu">Menu</button>
+  <mat-menu class="mat-menu-panel" #accountMenu="matMenu">
+
+    <button routerLink="/schedules" type="button" mat-menu-item class="text">
+      <span class="material-icons">home</span> Home
+    </button>
+
+    <button routerLink="/buslines" type="button" mat-menu-item class="text">
+      <span class="material-icons">search</span> Search
+    </button>
+
+    <button routerLink="/schedules" type="button" mat-menu-item class="text">
+      <span class="material-icons">schedule</span> Schedules
+    </button>
+
+    <button mat-menu-item type="button" class="text" (click)="menuItemClicked('logout')">
+      <span class="material-icons">logout</span> Logout
+    </button>
+
+  </mat-menu>
+
+  <div class="rectangle37"></div>
+</mat-toolbar>

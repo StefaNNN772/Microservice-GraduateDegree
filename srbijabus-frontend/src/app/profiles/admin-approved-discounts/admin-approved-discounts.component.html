@@ -1,0 +1,36 @@
+<app-navbar-admin></app-navbar-admin>
+<div class="admin-review-container">
+  <h2>Approved Discounts</h2>
+  <div *ngIf="requests.length === 0">No approved discounts yet.</div>
+  <table *ngIf="requests.length > 0" class="discount-table">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Birthday</th>
+      <th>E-mail</th>
+      <th>Discount Type</th>
+      <th>Document</th>
+      <th>Preview</th>
+      <th>Valid Until</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of requests">
+      <td>{{ user.name }} {{ user.lastName }}</td>
+      <td>{{ user.birthday | date: 'dd.MM.yyyy.' }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ discountEnum[user.discountType] }}</td>
+      <td class="filename">{{ getFileName(user.discountDocumentPath) }}</td>
+      <td>
+        <button (click)="openImage(user.discountDocumentPath)" class="icon-btn" title="Preview">
+          <mat-icon>search</mat-icon>
+        </button>
+      </td>
+      <td>{{ user.discountValidUntil | date: 'dd.MM.yyyy.' }}</td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="image-modal" [class.show]="showModal" (click)="closeImage()">
+    <img [src]="selectedImagePath" alt="Preview">
+  </div>
+</div>

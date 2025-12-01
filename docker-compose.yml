@@ -1,0 +1,312 @@
+version: '3.8'
+
+services:
+  # ==================== DATABASES ====================
+  postgres-auth:
+    image: postgres:15
+    container_name: postgres-auth
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: kalabunga
+      POSTGRES_DB: authdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-auth-data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-route:
+    image: postgres:15
+    container_name: postgres-route
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: kalabunga
+      POSTGRES_DB: routedb
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-route-data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-reservation:
+    image: postgres:15
+    container_name: postgres-reservation
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: kalabunga
+      POSTGRES_DB: reservationdb
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-reservation-data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==================== MICROSERVICES ====================
+  authservice:
+    build:
+      context: ./src/AuthService/AuthService
+      dockerfile: Dockerfile
+    container_name: authservice
+    ports:
+      - "8081:8081"
+    volumes:
+      - profile-images:/app/uploads/profile-images
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres-auth;Port=5432;Database=authdb;Username=postgres;Password=kalabunga
+      - Cors__Origins__0=http://localhost:4200
+      - Cors__Origins__1=http://localhost:5000
+      - Email__SMTP=smtp.gmail.com
+      - Email__Port=587
+      - Email__SenderEmail=schneiderelectricinternship@gmail.com
+      - Email__SenderPassword=aeoo vuqm gifg pnsw
+      - UPLOAD_PATH=/app/uploads/profile-images
+    depends_on:
+      postgres-auth:
+        condition: service_healthy
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  routeservice:
+    build:
+      context: ./src/RouteService/RouteService
+      dockerfile: Dockerfile
+    container_name: routeservice
+    ports:
+      - "8082:8082"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres-route;Port=5432;Database=routedb;Username=postgres;Password=kalabunga
+      - Services__AuthService=http://authservice:8081
+      - Services__ReservationService=http://reservationservice:8083
+      - Cors__Origins__0=http://localhost:4200
+      - Cors__Origins__1=http://localhost:5000
+      - JWT__Secret=ThisIsAVeryLongSecretKeyThatIsAtLeast64BytesLongForHmacSha512ABCDEFGHIJK
+      - JWT__Issuer=serbiaBus
+      - JWT__Audience=web
+      - Email__SMTP=smtp.gmail.com
+      - Email__Port=587
+      - Email__SenderEmail=schneiderelectricinternship@gmail.com
+      - Email__SenderPassword=aeoo vuqm gifg pnsw
+    depends_on:
+      postgres-route:
+        condition: service_healthy
+      authservice:
+        condition: service_started
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  reservationservice:
+    build:
+      context: ./src/ReservationService/ReservationService
+      dockerfile: Dockerfile
+    container_name: reservationservice
+    ports:
+      - "8083:8083"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres-reservation;Port=5432;Database=reservationdb;Username=postgres;Password=kalabunga
+      - Services__AuthService=http://authservice:8081
+      - Services__RouteService=http://routeservice:8082
+      - Cors__Origins__0=http://localhost:4200
+      - Cors__Origins__1=http://localhost:5000
+      - JWT__Secret=ThisIsAVeryLongSecretKeyThatIsAtLeast64BytesLongForHmacSha512ABCDEFGHIJK
+      - JWT__Issuer=serbiaBus
+      - JWT__Audience=web
+      - StripeAPI__ApiKey=sk_test_51Rkt0bFydZAzd9fvcLES6efZCYpAzKg82MmpNATcXlB2y7mZhtatxJ5CNWvUZ3qcBz87mJ2QfSa0MhrwHAbbPRtJ00utIU8n1k
+      - Email__SMTP=smtp.gmail.com
+      - Email__Port=587
+      - Email__SenderEmail=schneiderelectricinternship@gmail.com
+      - Email__SenderPassword=aeoo vuqm gifg pnsw
+    depends_on:
+      postgres-reservation:
+        condition: service_healthy
+      authservice:
+        condition: service_started
+      routeservice:
+        condition: service_started
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  # ==================== API GATEWAY ====================
+  apigateway:
+    build:
+      context: ./src/ApiGateway/ApiGateway
+      dockerfile: Dockerfile
+    container_name: apigateway
+    ports:
+      - "5000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - JWT__Secret=ThisIsAVeryLongSecretKeyThatIsAtLeast64BytesLongForHmacSha512ABCDEFGHIJK
+      - JWT__Issuer=serbiaBus
+      - JWT__Audience=web
+    depends_on:
+      - authservice
+      - routeservice
+      - reservationservice
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  # ==================== FRONTEND ====================
+  frontend:
+    build:
+      context: ./srbijabus-frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - apigateway
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  # ==================== MONITORING ====================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  # ==================== POSTGRES EXPORTERS ====================
+  postgres-exporter-auth:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: postgres-exporter-auth
+    environment:
+      DATA_SOURCE_NAME: "postgresql://postgres:kalabunga@postgres-auth:5432/authdb?sslmode=disable"
+    ports:
+      - "9187:9187"
+    networks:
+      - microservices-network
+    depends_on:
+      - postgres-auth
+    restart: unless-stopped
+
+  postgres-exporter-route:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: postgres-exporter-route
+    environment:
+      DATA_SOURCE_NAME: "postgresql://postgres:kalabunga@postgres-route:5432/routedb?sslmode=disable"
+    ports:
+      - "9188:9187"
+    networks:
+      - microservices-network
+    depends_on:
+      - postgres-route
+    restart: unless-stopped
+
+  postgres-exporter-reservation:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: postgres-exporter-reservation
+    environment:
+      DATA_SOURCE_NAME: "postgresql://postgres:kalabunga@postgres-reservation:5432/reservationdb?sslmode=disable"
+    ports:
+      - "9189:9187"
+    networks:
+      - microservices-network
+    depends_on:
+      - postgres-reservation
+    restart: unless-stopped
+
+  # ==================== NODE EXPORTER (HOST METRICS) ====================
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - microservices-network
+    restart: unless-stopped
+    pid: host
+
+  # ==================== cADVISOR (DOCKER CONTAINER METRICS) ====================
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+    networks:
+      - microservices-network
+    restart: unless-stopped
+    privileged: true
+    devices:
+      - /dev/kmsg
+
+volumes:
+  postgres-auth-data:
+  postgres-route-data:
+  postgres-reservation-data:
+  prometheus-data:
+  grafana-data:
+  profile-images:
+
+networks:
+  microservices-network:
+    driver: bridge

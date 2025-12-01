@@ -1,0 +1,88 @@
+<!--<div class="page">-->
+  <app-navbar-user></app-navbar-user>
+  <div class="profile-wrapper">
+    <div class="profile-form">
+      <div class="left">
+        <div class="image-wrapper" *ngIf="!user.profileImagePath" (click)="triggerImageUpload()">
+          <mat-icon class="add-icon">add</mat-icon>
+          <input type="file" id="profileImageInput" hidden (change)="onProfileImageSelected($event)">
+        </div>
+        <div class="image-preview" *ngIf="user.profileImagePath" (mouseenter)="hoveringImage = true" (mouseleave)="hoveringImage = false">
+          <button class="delete-icon" *ngIf="hoveringImage" (click)="deleteProfileImage($event)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <img [src]="selectedProfileImagePath" alt="Profile image">
+        </div>
+      </div>
+      <div class="right">
+        <div class="input-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" [(ngModel)]="user.name">
+        </div>
+        <div class="input-group">
+          <label for="lastname">Last Name</label>
+          <input type="text" id="lastname" [(ngModel)]="user.lastName">
+        </div>
+        <div class="input-group">
+          <label for="birthday">Birthday</label>
+          <input type="date" id="birthday" [(ngModel)]="birthdayString">
+        </div>
+        <button class="btn btn-update" [disabled]="!isFormValid()" (click)="updateProfile()">Update</button>
+        <div class="input-group" *ngIf="user.discountStatus==DiscountStatus.NoRequest">
+          <label for="discountType">Discount Type</label>
+          <select id="discountType" [(ngModel)]="discountType">
+            <option value="" disabled selected>Select discount type</option>
+            <option value="pupil">Pupil</option>
+            <option value="student">Student</option>
+            <option value="pensioner">Pensioner</option>
+          </select>
+        </div>
+        <div class="input-group" *ngIf="user.discountStatus==DiscountStatus.NoRequest">
+          <label for="proofImage">Document (image)</label>
+          <input type="file" id="proofImage" (change)="onFileSelected($event)">
+        </div>
+        <button *ngIf="user.discountStatus==DiscountStatus.NoRequest" class="btn btn-submit" [disabled]="!discountType || !proofImage" (click)="submitDiscountRequest()">
+          Submit Discount Request
+        </button>
+        <div class="input-group" *ngIf="user.discountStatus==DiscountStatus.Pending">
+          <div class="document-info">
+            <span class="filename">{{ getFileName(user.discountDocumentPath) }}</span>
+            <button (click)="openImage(user.discountDocumentPath)" class="icon-btn" title="Preview">
+              <mat-icon>search</mat-icon>
+            </button>
+            <button (click)="confirmingDelete = true" class="icon-btn" title="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <div class="confirm-dialog" *ngIf="confirmingDelete">
+              <div class="dialog-content">
+                <p>Are you sure you want to delete the document?</p>
+                <div class="dialog-actions">
+                  <button (click)="deleteImage()">Yes</button>
+                  <button (click)="confirmingDelete = false">No</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="image-modal" [class.show]="showModal" (click)="closeImage()">
+            <img [src]="selectedImagePath" alt="Preview">
+          </div>
+          <label>Please wait for an admin to approve.</label>
+        </div>
+        <div class="input-group" *ngIf="user.discountStatus==DiscountStatus.Approved">
+          <p class="discount-info">Discount Type:   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b> {{ DiscountTypeEnum[user.discountType] }} </b></p>
+          <p class="discount-info">Discount Valid Until: &nbsp;&nbsp;&nbsp;&nbsp;<b> {{ user.discountValidUntil | date: 'dd.MM.yyyy.' }}</b></p>
+          <br>
+          <div class="document-info">
+            <span class="filename">{{ getFileName(user.discountDocumentPath) }}</span>
+            <button (click)="openImage(user.discountDocumentPath)" class="icon-btn" title="Preview">
+              <mat-icon>search</mat-icon>
+            </button>
+          </div>
+          <div class="image-modal" [class.show]="showModal" (click)="closeImage()">
+            <img [src]="selectedImagePath" alt="Preview">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--</div>-->

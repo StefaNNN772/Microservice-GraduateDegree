@@ -1,0 +1,162 @@
+.register-container {
+  display: flex;
+  height: 100vh;
+  background: linear-gradient(135deg, #e6f7ff, #ffffff);
+}
+
+.register-left {
+  flex: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.register-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.logo {
+  width: 300px;
+  height: auto;
+  margin: 20px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+}
+
+.register-left {
+  flex-direction: column;
+  background-color: #f0f4f8;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+}
+
+.register-left:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.register-left h2 {
+  font-size: 2.5rem;
+  color: #305a87;
+  margin-bottom: 1rem;
+}
+
+.register-left p {
+  margin-bottom: 1rem;
+  color: #ec1d24;
+}
+
+.register-left form {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.parts{
+  display: flex;
+  padding: 0;
+  justify-content: space-between;
+}
+
+.form-part {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+}
+
+.register-left form label {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #37474f;
+}
+
+.register-left form input, .register-left form select {
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid #90a4ae;
+  border-radius: 6px;
+}
+
+.register-left form input[type="file"] {
+  padding: 0.5rem;
+}
+
+.register-left .btn {
+  padding: 0.75rem;
+  margin-top: 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: #305a87;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.register-left .btn-register:hover {
+  background-color: #1c3652;
+}
+
+.register-left .highlight-box {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #e0f7fa;
+  border-radius: 8px;
+  color: #ec1d24;
+  font-size: 1rem;
+}
+
+.google p{
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #37474f;
+}
+
+.btn-google{
+  cursor: pointer;
+  background-color: transparent;
+  color: #305a87;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.register-right {
+  background-color: #e3f2fd;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.register-info {
+  text-align: center;
+}
+
+.register-info h3 {
+  font-size: 2rem;
+  color: #305a87;
+  margin-bottom: 1rem;
+}
+
+.register-info p {
+  margin-bottom: 1rem;
+  color: #ec1d24;
+}
+
+.register-info img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #90a4ae;
+  border-radius: 8px;
+}
+
+

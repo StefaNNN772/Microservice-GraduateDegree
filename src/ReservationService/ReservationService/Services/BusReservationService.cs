@@ -1,0 +1,36 @@
+﻿using ReservationService.DTOs;
+using ReservationService.Models;
+using ReservationService.Repository;
+
+namespace ReservationService.Services
+{
+    public class BusReservationService
+    {
+        private readonly BusReservationRepository _busReservationRepository;
+
+        public BusReservationService(BusReservationRepository busReservationRepository)
+        {
+            this._busReservationRepository = busReservationRepository;
+        }
+
+        public async Task<List<int>> GetBusLineSeats(long id)
+        {
+            return await _busReservationRepository.GetBusLineSeats(id);
+        }
+
+        public async Task<bool> AddReservation(Ticket ticket, List<int> numOfSeat)
+        {
+            return await _busReservationRepository.AddReservation(ticket, numOfSeat);
+        }
+
+        public async Task<List<TicketDTO>> UserToNotify(long id)
+        {
+            return await _busReservationRepository.UserToNotify(id);
+        }
+
+        public async Task<List<TicketDTO>> GetTicketsToNotifyForUpdate(long id)
+        {
+            return await _busReservationRepository.GetTicketsToNotifyForUpdate(id);
+        }
+    }
+}

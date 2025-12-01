@@ -1,0 +1,277 @@
+body, html {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #f2f5f7, #ffffff);
+  margin: 0;
+  padding: 0;
+}
+
+.schedule-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 80vh;
+  width: 100%;
+  max-width: 1300px;
+  margin: 40px auto;
+  padding: 24px 16px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 16px;
+  box-shadow: 0 2px 16px #0001;
+  box-sizing: border-box;
+  gap: 32px;
+}
+
+/* Leva i desna strana su fleksibilne, rastu/shrink-u po sadržaju */
+.schedule-left, .schedule-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 260px;
+  max-width: 500px;
+  flex: 1 1 320px;
+  background-color: #f0f4f8;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 1.5rem 1rem;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Da se lepo skuplja/širi bez fiksne visine */
+.schedule-left {
+  margin-right: 0;
+}
+.schedule-right {
+  margin-left: 0;
+}
+
+h2 {
+  font-size: 2.2rem;
+  text-align: center;
+  color: #305a87;
+  margin-bottom: 1rem;
+}
+
+/* Uklanja spin dugmiće */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+form {
+  width: 100%;
+  max-width: 390px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+label {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #37474f;
+  font-weight: bold;
+}
+
+input {
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid #90a4ae;
+  border-radius: 6px;
+}
+
+button {
+  padding: 0.75rem;
+  margin-top: 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: #305a87;
+  color: white;
+  transition: background-color 0.3s;
+}
+button:hover {
+  background-color: #1c3652;
+}
+
+table {
+  width: 100%;
+  overflow-y: auto;
+  display: block;
+  background-color: transparent;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+td, th {
+  width: 25%;
+}
+td button {
+  margin: 0 5px;
+  padding: 5px;
+}
+
+/* Dani selekcija i izgled */
+.days-selection, .days-selection1 {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+  margin-bottom: 10px;
+}
+.days-selection label {
+  margin: 2px 0;
+}
+
+.days-container {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.everyday-option {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.everyday-checkbox {
+  background-color: #f8f9fa;
+  border: 2px solid #305a87;
+  border-radius: 6px;
+  padding: 0.5rem;
+  transition: all 0.3s;
+}
+.everyday-checkbox:hover {
+  background-color: #e7f3ff;
+  transform: translateY(-1px);
+}
+
+.individual-days {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.5rem;
+}
+
+.day-checkbox {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s;
+  border: 1px solid #ddd;
+  background-color: #fafafa;
+  margin: 0;
+  font-weight: normal;
+}
+.day-checkbox:hover {
+  background-color: #f0f8ff;
+  border-color: #305a87;
+  transform: translateY(-1px);
+}
+.day-checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.checkmark {
+  position: relative;
+  height: 18px;
+  width: 18px;
+  background-color: #ffffff;
+  border: 2px solid #ccc;
+  border-radius: 3px;
+  margin-right: 0.5rem;
+  transition: all 0.3s;
+}
+.day-checkbox input:checked ~ .checkmark {
+  background-color: #305a87;
+  border-color: #305a87;
+}
+.day-checkbox input:checked ~ .checkmark:after {
+  content: "";
+  position: absolute;
+  display: block;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.day-checkbox input:disabled ~ .checkmark {
+  background-color: #f5f5f5;
+  border-color: #ddd;
+  opacity: 0.6;
+}
+.day-checkbox input:disabled ~ .day-text {
+  color: #999;
+}
+.day-text {
+  font-size: 0.9rem;
+  color: #37474f;
+  user-select: none;
+}
+.day-checkbox.everyday-checkbox .day-text {
+  font-weight: 600;
+  color: #305a87;
+}
+
+/* Responsive layout */
+@media (max-width: 1024px) {
+  .schedule-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 16px 4vw;
+  }
+  .schedule-left, .schedule-right {
+    max-width: unset;
+    min-width: 0;
+    margin: 0;
+  }
+}
+
+@media (max-width: 650px) {
+  .schedule-container {
+    border-radius: 0;
+    margin: 0;
+    padding: 6px 0;
+    box-shadow: none;
+  }
+  .schedule-left, .schedule-right {
+    border-radius: 0;
+    box-shadow: none;
+    padding: 1rem 0.3rem;
+  }
+  form {
+    max-width: 100%;
+  }
+  h2 {
+    font-size: 1.4rem;
+  }
+  .days-container {
+    padding: 0.5rem;
+  }
+  .individual-days {
+    grid-template-columns: 1fr;
+  }
+}

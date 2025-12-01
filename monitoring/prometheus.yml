@@ -1,0 +1,70 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+scrape_configs:
+  # AuthService metrics
+  - job_name: 'authservice'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['authservice:8081']
+        labels:
+          service: 'authservice'
+          environment: 'development'
+
+  # RouteService metrics
+  - job_name: 'routeservice'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['routeservice:8082']
+        labels:
+          service: 'routeservice'
+          environment: 'development'
+
+  # ReservationService metrics
+  - job_name: 'reservationservice'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['reservationservice:8083']
+        labels:
+          service: 'reservationservice'
+          environment: 'development'
+
+  # PostgreSQL exporters
+  - job_name: 'postgres-auth'
+    static_configs:
+      - targets: ['postgres-exporter-auth:9187']
+        labels:
+          database: 'authdb'
+
+  - job_name: 'postgres-route'
+    static_configs:
+      - targets: ['postgres-exporter-route:9187']
+        labels:
+          database: 'routedb'
+
+  - job_name: 'postgres-reservation'
+    static_configs:
+      - targets: ['postgres-exporter-reservation:9187']
+        labels:
+          database: 'reservationdb'
+
+  # Node Exporter - HOST system metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          instance: 'localhost'
+
+  # cAdvisor - Docker container metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          instance: 'docker-host'
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']

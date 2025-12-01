@@ -1,0 +1,39 @@
+<div class="login-container">
+  <div class="login-left">
+    <h2>Welcome to SerbiaBus 🚍</h2>
+    <p>Login to access your bus schedules, tickets, and reservations</p>
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" placeholder="Enter your email" aria-label="Email Address">
+      <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
+        Please enter a valid email.
+      </div>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" formControlName="password" placeholder="Enter your password" aria-label="Password">
+      <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
+        Password is required.
+      </div>
+
+      <button type="submit" class="btn btn-signin">Sign In</button>
+    </form>
+    <div class="google">
+      <p>--------------------------------- &nbsp;&nbsp;&nbsp;Or &nbsp;&nbsp;&nbsp;---------------------------------</p>
+      <button id="google-button" class="btn-google">Continue via Google Account</button>
+    </div>
+
+    <div class="highlight-box">
+      <strong>Tip:</strong> Plan your trips and buy bus tickets easily on SerbiaBus!
+    </div>
+
+    <p>Don't have an account? <a routerLink="/register">Sign Up Now</a></p>
+  </div>
+
+  <div class="login-right">
+    <div class="login-info">
+      <h3>Why Login?</h3>
+      <p>Access real-time bus schedules, make reservations, and track your ticket purchases.</p>
+      <!--      <img src="assets/energy-dashboard.png" alt="Energy Dashboard Preview">-->
+    </div>
+  </div>
+</div>

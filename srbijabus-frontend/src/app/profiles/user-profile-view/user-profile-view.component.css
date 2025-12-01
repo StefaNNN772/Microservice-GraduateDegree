@@ -1,0 +1,259 @@
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f4f8;
+  padding: 5vh 0;
+  min-height: 80vh;
+}
+
+.profile-form {
+  display: flex;
+  background-color: #f0f4f8;
+  padding: 2rem;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 700px;
+}
+
+.left, .right {
+  flex: 1;
+}
+
+.left{
+  margin-top: 1rem;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.image-wrapper {
+  width: 300px;
+  height: 300px;
+  border: 2px dashed #90a4ae;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e0e0e0;
+}
+
+.add-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+  color: #607d8b;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+
+.image-preview {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.image-preview:hover .delete-icon:hover + img {
+  opacity: 0.6;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.2s ease;
+}
+
+.delete-icon {
+  margin-bottom: -36px;
+  margin-right: 5px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.delete-icon mat-icon {
+  font-size: 20px;
+  color: #d32f2f;
+}
+
+.right {
+  max-width: 350px;
+}
+
+.input-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #37474f;
+}
+
+input {
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid #90a4ae;
+  border-radius: 6px;
+}
+
+.btn {
+  padding: 0.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #305a87;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #1c3652;
+}
+
+select {
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid #90a4ae;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #f8f9fa;
+}
+
+input[type="file"] {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.btn-submit {
+  background-color: #2e7d32;
+}
+
+.btn-submit:hover {
+  background-color: #1b5e20;
+}
+
+.pending-request {
+  color: #305a87;
+  font-weight: bold;
+}
+
+.document-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.filename {
+  font-style: italic;
+  color: #333;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.icon-btn:hover {
+  color: #007bff;
+}
+
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.image-modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.image-modal img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #000;
+  transition: transform 0.3s ease;
+}
+
+.confirm-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.dialog-actions button {
+  margin: 0 10px;
+  width: 50px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #305a87;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.dialog-actions button:hover {
+  background-color: #1c3652;
+}
+
+.discount-info{
+  margin: 10px 0;
+}

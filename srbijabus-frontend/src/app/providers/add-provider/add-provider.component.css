@@ -1,0 +1,79 @@
+.add-provider-container {
+  display: flex;
+  height: 90vh;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0fbff, #ffffff);
+}
+
+.form-wrapper {
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 700px;
+  width: 100%;
+  flex-direction: column;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+}
+
+.form-wrapper h2 {
+  font-size: 2.5rem;
+  color: #305a87;
+  margin-bottom: 1rem;
+}
+
+.form-wrapper p {
+  margin-bottom: 1rem;
+  color: #ec1d24;
+}
+
+.form-wrapper form{
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.parts{
+  display: flex;
+  padding: 0;
+  justify-content: space-between;
+}
+
+.form-part {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-wrapper form label {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #37474f;
+}
+
+.form-wrapper form input, .form-wrapper form select {
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid #90a4ae;
+  border-radius: 6px;
+}
+
+.form-wrapper .btn-submit {
+  padding: 0.75rem;
+  margin-top: 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: #305a87;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.form-wrapper .btn-submit:hover {
+  background-color: #1c3652;
+}
